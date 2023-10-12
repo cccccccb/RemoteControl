@@ -1,0 +1,36 @@
+QMAKE_SPEC_VAR = $$[QMAKE_SPEC]
+
+contains(QMAKE_SPEC_VAR,.*win32.*) {
+    CONFIG_TOOL_PATH = $${REMOTECONTROL_QMAKE_CONFIG_PATH}/tools
+
+    isEmpty(PROTOBUF_BIN_FILE_PATH) {
+        PROTOBUF_BIN_FILE_PATH = $${CONFIG_TOOL_PATH}/protoc.exe
+    }
+    isEmpty(PROTOBUF_OUT_PWD) {
+        PROTOBUF_OUT_PWD = $${_PRO_FILE_PWD_}
+    }
+
+    exists($${PROTOBUF_BIN_FILE_PATH}) {
+        protobuf_generate.name = generate protobuf ${QMAKE_FILE_NAME}
+        protobuf_generate.variable_out = SOURCES
+        protobuf_generate.dependency_type = TYPE_C
+        protobuf_generate.input = PROTOBUF_INPUT_FILES
+        protobuf_generate.output = $${PROTOBUF_OUT_PWD}/${QMAKE_FILE_BASE}.pb.cc
+        protobuf_generate.commands = $${PROTOBUF_BIN_FILE_PATH} --proto_path=$${_PRO_FILE_PWD_} --cpp_out=$${PROTOBUF_OUT_PWD} ${QMAKE_FILE_NAME}
+        protobuf_generate.CONFIG = target_predeps
+
+        # only for clean header!
+        protobuf_header_clean.name = clean ${QMAKE_FILE_BASE}.pb.h
+        protobuf_header_clean.input = PROTOBUF_INPUT_FILES
+        protobuf_header_clean.output = $${PROTOBUF_OUT_PWD}/${QMAKE_FILE_BASE}.pb.h
+        protobuf_header_clean.commands = @echo ${QMAKE_FILE_BASE}.pb.h
+        protobuf_header_clean.CONFIG = no_link
+
+        QMAKE_EXTRA_COMPILERS += protobuf_generate protobuf_header_clean
+        INCLUDEPATH += $${PROTOBUF_OUT_PWD}
+    } else {
+        error("No protoc file find, generate protobuf files failed!")
+    }
+} else {
+    message("Protobuf generate only use in windows now!")
+}

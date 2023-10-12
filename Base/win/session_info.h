@@ -1,0 +1,87 @@
+//
+// Aspia Project
+// Copyright (C) 2016-2023 Dmitry Chapyshev <dmitry@aspia.ru>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <https://www.gnu.org/licenses/>.
+//
+
+#ifndef BASE_WIN_SESSION_INFO_H
+#define BASE_WIN_SESSION_INFO_H
+
+#include "Base/session_id.h"
+#include "Base/win/scoped_wts_memory.h"
+#include "Base/base_export.h"
+
+#include <string>
+
+namespace base {
+	namespace win {
+
+        class BASE_EXPORT SessionInfo
+		{
+		public:
+			explicit SessionInfo(SessionId session_id);
+			~SessionInfo();
+
+			bool isValid() const;
+
+			SessionId sessionId() const;
+
+			enum class ConnectState
+			{
+				ACTIVE = WTSActive,       // User logged on to WinStation.
+				CONNECTED = WTSConnected,    // WinStation connected to client.
+				CONNECT_QUERY = WTSConnectQuery, // In the process of connecting to client.
+				SHADOW = WTSShadow,       // Shadowing another WinStation.
+				DISCONNECTED = WTSDisconnected, // WinStation logged on without client.
+				IDLE = WTSIdle,         // Waiting for client to connect.
+				LISTEN = WTSListen,       // WinStation is listening for connection.
+				RESET = WTSReset,        // WinStation is being reset.
+				DOWN = WTSDown,         // WinStation is down due to error.
+				INIT = WTSInit,         // WinStation in initialization.
+			};
+
+			ConnectState connectState() const;
+			static const char* connectStateToString(ConnectState connect_state);
+
+			std::string winStationName() const;
+			std::u16string winStationName16() const;
+
+			std::string domain() const;
+			std::u16string domain16() const;
+
+			std::string userName() const;
+			std::u16string userName16() const;
+
+			std::string clientName() const;
+			std::u16string clientName16() const;
+
+			int64_t connectTime() const;
+			int64_t disconnectTime() const;
+			int64_t lastInputTime() const;
+			int64_t logonTime() const;
+			int64_t currentTime() const;
+
+			bool isUserLocked() const;
+
+		private:
+			ScopedWtsMemory<WTSINFOEXW> info_;
+
+			DISALLOW_COPY_AND_ASSIGN(SessionInfo);
+		};
+
+	}
+} // namespace base::win
+
+#endif // BASE_WIN_SESSION_INFO_H

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ClientWindow</class>
+ <widget class="QMainWindow" name="ClientWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>262</width>
+    <height>226</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Aspia Client</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QWidget#centralwidget { background-color:#FAFAFA; }</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_id_icon">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../resources/client.qrc">:/img/computer.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_address">
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+font: bold 11px;
+color:#505050;
+}</string>
+        </property>
+        <property name="text">
+         <string>ID / Address</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QComboBox" name="combo_address">
+      <property name="styleSheet">
+       <string notr="true">QComboBox {
+border: 1px solid #CDCDCD;
+border-radius: 3px;
+background: #FAFAFA;
+color: #505050;
+padding: 4px;
+}
+QComboBox::drop-down {
+subcontrol-origin: padding;
+subcontrol-position: top right;
+border-left-width: 1px;
+border-left-color: #E1E8EE;
+border-left-style: solid;
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+width: 25px;
+}
+QComboBox::drop-down::hover {
+background: #E9E9E9;
+}
+QComboBox::drop-down::pressed {
+background: #CDCDCD;
+}
+QComboBox::down-arrow {
+image: url(:/img/arrow-down.png);
+background-repeat: no-repeat;
+background-position: center center;
+width: 10px;
+height: 10px;
+}</string>
+      </property>
+      <property name="editable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_session_type_icon">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="../resources/client.qrc">:/img/gear.png</pixmap>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_session_type">
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+font: bold 11px;
+color:#505050;
+}</string>
+        </property>
+        <property name="text">
+         <string>Session Type</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QComboBox" name="combo_session_type">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+border: 1px solid #CDCDCD;
+border-radius: 3px;
+background: #FAFAFA;
+color: #505050;
+padding: 4px;
+}
+QComboBox::drop-down {
+subcontrol-origin: padding;
+subcontrol-position: top right;
+border-left-width: 1px;
+border-left-color: #E1E8EE;
+border-left-style: solid;
+border-top-right-radius: 3px;
+border-bottom-right-radius: 3px;
+width: 25px;
+}
+QComboBox::drop-down::hover {
+background: #E9E9E9;
+}
+QComboBox::drop-down::pressed {
+background: #CDCDCD;
+}
+QComboBox::down-arrow {
+image: url(:/img/arrow-down.png);
+background-repeat: no-repeat;
+background-position: center center;
+width: 10px;
+height: 10px;
+}</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button_session_config">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+color: #505050;
+font: bold 11px;
+background-color: #FAFAFA;
+border: 1px solid #CDCDCD;
+border-radius: 3px;
+padding: 4px;
+}
+QPushButton:hover {
+background: #EBEBEB;
+border: 1px solid #AAAAAA;
+border-radius: 2px;
+}
+QPushButton:pressed {
+background: #D7D7D7;
+border: 1px solid #AAAAAA;
+border-radius: 2px;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../resources/client.qrc">
+          <normaloff>:/img/gear-pencil.png</normaloff>:/img/gear-pencil.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>6</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button_connect">
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+color: #505050;
+font: bold 11px;
+background-color: #E9E9E9;
+border: 1px solid #CDCDCD;
+border-radius: 3px;
+padding: 5px 25px 5px 25px;
+}
+QPushButton:hover {
+background: #EBEBEB;
+border: 1px solid #AAAAAA;
+border-radius: 2px;
+}
+QPushButton:pressed {
+background: #D7D7D7;
+border: 1px solid #AAAAAA;
+border-radius: 2px;
+}</string>
+        </property>
+        <property name="text">
+         <string>Connect</string>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>262</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_aspia">
+    <property name="title">
+     <string notr="true">Aspia</string>
+    </property>
+    <addaction name="action_settings"/>
+    <addaction name="action_clear_history"/>
+    <addaction name="separator"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="action_help"/>
+    <addaction name="separator"/>
+    <addaction name="action_check_for_updates"/>
+    <addaction name="action_update_settings"/>
+    <addaction name="separator"/>
+    <addaction name="action_about"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="menu_language">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../resources/client.qrc">
+       <normaloff>:/img/locale.png</normaloff>:/img/locale.png</iconset>
+     </property>
+    </widget>
+    <addaction name="menu_language"/>
+    <addaction name="separator"/>
+    <addaction name="action_show_icons_in_menus"/>
+   </widget>
+   <addaction name="menu_aspia"/>
+   <addaction name="menuView"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <action name="action_help">
+   <property name="icon">
+    <iconset resource="../resources/client.qrc">
+     <normaloff>:/img/lifebuoy.png</normaloff>:/img/lifebuoy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Online Help...</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="icon">
+    <iconset resource="../resources/client.qrc">
+     <normaloff>:/img/about.png</normaloff>:/img/about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="action_settings">
+   <property name="icon">
+    <iconset resource="../resources/client.qrc">
+     <normaloff>:/img/settings.png</normaloff>:/img/settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings...</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="icon">
+    <iconset resource="../resources/client.qrc">
+     <normaloff>:/img/exit.png</normaloff>:/img/exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="action_show_icons_in_menus">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show icons in menus</string>
+   </property>
+  </action>
+  <action name="action_check_for_updates">
+   <property name="text">
+    <string>Check for updates...</string>
+   </property>
+  </action>
+  <action name="action_update_settings">
+   <property name="text">
+    <string>Update Settings</string>
+   </property>
+  </action>
+  <action name="action_clear_history">
+   <property name="text">
+    <string>Clear history</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../resources/client.qrc"/>
+ </resources>
+ <connections/>
+</ui>
