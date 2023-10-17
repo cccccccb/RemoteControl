@@ -50,18 +50,6 @@ public:
                 setIcon(0, QIcon(":/img/monitor.png"));
                 break;
 
-            case proto::SESSION_TYPE_FILE_TRANSFER:
-                setIcon(0, QIcon(":/img/folder-stand.png"));
-                break;
-
-            case proto::SESSION_TYPE_SYSTEM_INFO:
-                setIcon(0, QIcon(":/img/computer_info.png"));
-                break;
-
-            case proto::SESSION_TYPE_TEXT_CHAT:
-                setIcon(0, QIcon(":/img/text-chat.png"));
-                break;
-
             default:
                 LOG(LS_FATAL) << "Unexpected session type: " << client.session_type;
                 return;

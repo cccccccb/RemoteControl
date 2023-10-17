@@ -20,7 +20,6 @@
 
 #include "Base/net/address.h"
 #include "Base/peer/user.h"
-#include "Client/Core/router_config_storage.h"
 
 #include <QMessageBox>
 #include <QPushButton>
@@ -38,31 +37,29 @@ ClientSettingsDialog::ClientSettingsDialog(QWidget* parent)
     if (cancel_button)
         cancel_button->setText(tr("Cancel"));
 
-    RouterConfigStorage config_storage;
-    RouterConfig config = config_storage.routerConfig();
-
     base::Address address(DEFAULT_ROUTER_TCP_PORT);
-    address.setHost(config.address);
-    address.setPort(config.port);
+    //! todo
+//    address.setHost(config.address);
+//    address.setPort(config.port);
 
     ui.checkbox_enable_router->setChecked(true);
     ui.edit_address->setText(QString::fromStdU16String(address.toString()));
-    ui.edit_username->setText(QString::fromStdU16String(config.username));
-    ui.edit_password->setText(QString::fromStdU16String(config.password));
+//    ui.edit_username->setText(QString::fromStdU16String(config.username));
+//    ui.edit_password->setText(QString::fromStdU16String(config.password));
 
-    if (!config_storage.isEnabled())
-    {
-        ui.checkbox_enable_router->setChecked(false);
+//    if (!config_storage.isEnabled())
+//    {
+//        ui.checkbox_enable_router->setChecked(false);
 
-        ui.label_address->setEnabled(false);
-        ui.edit_address->setEnabled(false);
+//        ui.label_address->setEnabled(false);
+//        ui.edit_address->setEnabled(false);
 
-        ui.label_username->setEnabled(false);
-        ui.edit_username->setEnabled(false);
+//        ui.label_username->setEnabled(false);
+//        ui.edit_username->setEnabled(false);
 
-        ui.label_password->setEnabled(false);
-        ui.edit_password->setEnabled(false);
-    }
+//        ui.label_password->setEnabled(false);
+//        ui.edit_password->setEnabled(false);
+//    }
 
     connect(ui.checkbox_enable_router, &QCheckBox::toggled, this, [this](bool checked)
     {
@@ -124,16 +121,6 @@ void ClientSettingsDialog::onButtonBoxClicked(QAbstractButton* button)
             ui.edit_password->selectAll();
             return;
         }
-
-        RouterConfig config;
-        config.address = address.host();
-        config.port = address.port();
-        config.username = std::move(username);
-        config.password = std::move(password);
-
-        RouterConfigStorage config_storage;
-        config_storage.setEnabled(ui.checkbox_enable_router->isChecked());
-        config_storage.setRouterConfig(config);
 
         accept();
     }

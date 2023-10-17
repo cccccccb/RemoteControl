@@ -37,8 +37,6 @@ public:
 
     void enableScreenSelect(bool enable);
     void enablePowerControl(bool enable);
-    void enableSystemInfo(bool enable);
-    void enableTextChat(bool enable);
     void enableRemoteUpdate(bool enable);
     void enableTaskManager(bool enable);
     void enableVideoPauseFeature(bool enable);
@@ -71,7 +69,6 @@ signals:
     void sig_startSession(proto::SessionType session_type);
     void sig_powerControl(proto::PowerControl::Action action);
     void sig_startRemoteUpdate();
-    void sig_startSystemInfo();
     void sig_startTaskManager();
     void sig_startStatistics();
     void sig_minimizeSession();

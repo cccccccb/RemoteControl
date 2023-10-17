@@ -155,7 +155,6 @@ PROTOBUF_CONSTEXPR UiToService::UiToService(
     /*decltype(_impl_.credentials_request_)*/nullptr
   , /*decltype(_impl_.connect_confirmation_)*/nullptr
   , /*decltype(_impl_.control_)*/nullptr
-  , /*decltype(_impl_.text_chat_)*/nullptr
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct UiToServiceDefaultTypeInternal {
   PROTOBUF_CONSTEXPR UiToServiceDefaultTypeInternal()
@@ -174,7 +173,6 @@ PROTOBUF_CONSTEXPR ServiceToUi::ServiceToUi(
   , /*decltype(_impl_.disconnect_event_)*/nullptr
   , /*decltype(_impl_.connect_confirmation_request_)*/nullptr
   , /*decltype(_impl_.video_recording_state_)*/nullptr
-  , /*decltype(_impl_.text_chat_)*/nullptr
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct ServiceToUiDefaultTypeInternal {
   PROTOBUF_CONSTEXPR ServiceToUiDefaultTypeInternal()
@@ -2732,7 +2730,6 @@ class UiToService::_Internal {
   static const ::proto::internal::CredentialsRequest& credentials_request(const UiToService* msg);
   static const ::proto::internal::ConnectConfirmation& connect_confirmation(const UiToService* msg);
   static const ::proto::internal::ServiceControl& control(const UiToService* msg);
-  static const ::proto::TextChat& text_chat(const UiToService* msg);
 };
 
 const ::proto::internal::CredentialsRequest&
@@ -2747,16 +2744,6 @@ const ::proto::internal::ServiceControl&
 UiToService::_Internal::control(const UiToService* msg) {
   return *msg->_impl_.control_;
 }
-const ::proto::TextChat&
-UiToService::_Internal::text_chat(const UiToService* msg) {
-  return *msg->_impl_.text_chat_;
-}
-void UiToService::clear_text_chat() {
-  if (GetArenaForAllocation() == nullptr && _impl_.text_chat_ != nullptr) {
-    delete _impl_.text_chat_;
-  }
-  _impl_.text_chat_ = nullptr;
-}
 UiToService::UiToService(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::MessageLite(arena, is_message_owned) {
@@ -2770,7 +2757,6 @@ UiToService::UiToService(const UiToService& from)
       decltype(_impl_.credentials_request_){nullptr}
     , decltype(_impl_.connect_confirmation_){nullptr}
     , decltype(_impl_.control_){nullptr}
-    , decltype(_impl_.text_chat_){nullptr}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
@@ -2783,9 +2769,6 @@ UiToService::UiToService(const UiToService& from)
   if (from._internal_has_control()) {
     _this->_impl_.control_ = new ::proto::internal::ServiceControl(*from._impl_.control_);
   }
-  if (from._internal_has_text_chat()) {
-    _this->_impl_.text_chat_ = new ::proto::TextChat(*from._impl_.text_chat_);
-  }
   // @@protoc_insertion_point(copy_constructor:proto.internal.UiToService)
 }
 
@@ -2797,7 +2780,6 @@ inline void UiToService::SharedCtor(
       decltype(_impl_.credentials_request_){nullptr}
     , decltype(_impl_.connect_confirmation_){nullptr}
     , decltype(_impl_.control_){nullptr}
-    , decltype(_impl_.text_chat_){nullptr}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -2816,7 +2798,6 @@ inline void UiToService::SharedDtor() {
   if (this != internal_default_instance()) delete _impl_.credentials_request_;
   if (this != internal_default_instance()) delete _impl_.connect_confirmation_;
   if (this != internal_default_instance()) delete _impl_.control_;
-  if (this != internal_default_instance()) delete _impl_.text_chat_;
 }
 
 void UiToService::SetCachedSize(int size) const {
@@ -2841,10 +2822,6 @@ void UiToService::Clear() {
     delete _impl_.control_;
   }
   _impl_.control_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && _impl_.text_chat_ != nullptr) {
-    delete _impl_.text_chat_;
-  }
-  _impl_.text_chat_ = nullptr;
   _internal_metadata_.Clear<std::string>();
 }
 
@@ -2874,14 +2851,6 @@ const char* UiToService::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
           ptr = ctx->ParseMessage(_internal_mutable_control(), ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // .proto.TextChat text_chat = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
-          ptr = ctx->ParseMessage(_internal_mutable_text_chat(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2936,13 +2905,6 @@ uint8_t* UiToService::_InternalSerialize(
         _Internal::control(this).GetCachedSize(), target, stream);
   }
 
-  // .proto.TextChat text_chat = 4;
-  if (this->_internal_has_text_chat()) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(4, _Internal::text_chat(this),
-        _Internal::text_chat(this).GetCachedSize(), target, stream);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
         static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
@@ -2980,13 +2942,6 @@ size_t UiToService::ByteSizeLong() const {
         *_impl_.control_);
   }
 
-  // .proto.TextChat text_chat = 4;
-  if (this->_internal_has_text_chat()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.text_chat_);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
   }
@@ -3020,10 +2975,6 @@ void UiToService::MergeFrom(const UiToService& from) {
     _this->_internal_mutable_control()->::proto::internal::ServiceControl::MergeFrom(
         from._internal_control());
   }
-  if (from._internal_has_text_chat()) {
-    _this->_internal_mutable_text_chat()->::proto::TextChat::MergeFrom(
-        from._internal_text_chat());
-  }
   _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
 }
 
@@ -3042,8 +2993,8 @@ void UiToService::InternalSwap(UiToService* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(UiToService, _impl_.text_chat_)
-      + sizeof(UiToService::_impl_.text_chat_)
+      PROTOBUF_FIELD_OFFSET(UiToService, _impl_.control_)
+      + sizeof(UiToService::_impl_.control_)
       - PROTOBUF_FIELD_OFFSET(UiToService, _impl_.credentials_request_)>(
           reinterpret_cast<char*>(&_impl_.credentials_request_),
           reinterpret_cast<char*>(&other->_impl_.credentials_request_));
@@ -3064,7 +3015,6 @@ class ServiceToUi::_Internal {
   static const ::proto::internal::DisconnectEvent& disconnect_event(const ServiceToUi* msg);
   static const ::proto::internal::ConnectConfirmationRequest& connect_confirmation_request(const ServiceToUi* msg);
   static const ::proto::internal::VideoRecordingState& video_recording_state(const ServiceToUi* msg);
-  static const ::proto::TextChat& text_chat(const ServiceToUi* msg);
 };
 
 const ::proto::internal::RouterState&
@@ -3091,16 +3041,6 @@ const ::proto::internal::VideoRecordingState&
 ServiceToUi::_Internal::video_recording_state(const ServiceToUi* msg) {
   return *msg->_impl_.video_recording_state_;
 }
-const ::proto::TextChat&
-ServiceToUi::_Internal::text_chat(const ServiceToUi* msg) {
-  return *msg->_impl_.text_chat_;
-}
-void ServiceToUi::clear_text_chat() {
-  if (GetArenaForAllocation() == nullptr && _impl_.text_chat_ != nullptr) {
-    delete _impl_.text_chat_;
-  }
-  _impl_.text_chat_ = nullptr;
-}
 ServiceToUi::ServiceToUi(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::MessageLite(arena, is_message_owned) {
@@ -3117,7 +3057,6 @@ ServiceToUi::ServiceToUi(const ServiceToUi& from)
     , decltype(_impl_.disconnect_event_){nullptr}
     , decltype(_impl_.connect_confirmation_request_){nullptr}
     , decltype(_impl_.video_recording_state_){nullptr}
-    , decltype(_impl_.text_chat_){nullptr}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
@@ -3139,9 +3078,6 @@ ServiceToUi::ServiceToUi(const ServiceToUi& from)
   if (from._internal_has_video_recording_state()) {
     _this->_impl_.video_recording_state_ = new ::proto::internal::VideoRecordingState(*from._impl_.video_recording_state_);
   }
-  if (from._internal_has_text_chat()) {
-    _this->_impl_.text_chat_ = new ::proto::TextChat(*from._impl_.text_chat_);
-  }
   // @@protoc_insertion_point(copy_constructor:proto.internal.ServiceToUi)
 }
 
@@ -3156,7 +3092,6 @@ inline void ServiceToUi::SharedCtor(
     , decltype(_impl_.disconnect_event_){nullptr}
     , decltype(_impl_.connect_confirmation_request_){nullptr}
     , decltype(_impl_.video_recording_state_){nullptr}
-    , decltype(_impl_.text_chat_){nullptr}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -3178,7 +3113,6 @@ inline void ServiceToUi::SharedDtor() {
   if (this != internal_default_instance()) delete _impl_.disconnect_event_;
   if (this != internal_default_instance()) delete _impl_.connect_confirmation_request_;
   if (this != internal_default_instance()) delete _impl_.video_recording_state_;
-  if (this != internal_default_instance()) delete _impl_.text_chat_;
 }
 
 void ServiceToUi::SetCachedSize(int size) const {
@@ -3215,10 +3149,6 @@ void ServiceToUi::Clear() {
     delete _impl_.video_recording_state_;
   }
   _impl_.video_recording_state_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && _impl_.text_chat_ != nullptr) {
-    delete _impl_.text_chat_;
-  }
-  _impl_.text_chat_ = nullptr;
   _internal_metadata_.Clear<std::string>();
 }
 
@@ -3272,14 +3202,6 @@ const char* ServiceToUi::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
       case 6:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
           ptr = ctx->ParseMessage(_internal_mutable_video_recording_state(), ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // .proto.TextChat text_chat = 7;
-      case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 58)) {
-          ptr = ctx->ParseMessage(_internal_mutable_text_chat(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -3355,13 +3277,6 @@ uint8_t* ServiceToUi::_InternalSerialize(
         _Internal::video_recording_state(this).GetCachedSize(), target, stream);
   }
 
-  // .proto.TextChat text_chat = 7;
-  if (this->_internal_has_text_chat()) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(7, _Internal::text_chat(this),
-        _Internal::text_chat(this).GetCachedSize(), target, stream);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = stream->WriteRaw(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).data(),
         static_cast<int>(_internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size()), target);
@@ -3420,13 +3335,6 @@ size_t ServiceToUi::ByteSizeLong() const {
         *_impl_.video_recording_state_);
   }
 
-  // .proto.TextChat text_chat = 7;
-  if (this->_internal_has_text_chat()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.text_chat_);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     total_size += _internal_metadata_.unknown_fields<std::string>(::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString).size();
   }
@@ -3472,10 +3380,6 @@ void ServiceToUi::MergeFrom(const ServiceToUi& from) {
     _this->_internal_mutable_video_recording_state()->::proto::internal::VideoRecordingState::MergeFrom(
         from._internal_video_recording_state());
   }
-  if (from._internal_has_text_chat()) {
-    _this->_internal_mutable_text_chat()->::proto::TextChat::MergeFrom(
-        from._internal_text_chat());
-  }
   _this->_internal_metadata_.MergeFrom<std::string>(from._internal_metadata_);
 }
 
@@ -3494,8 +3398,8 @@ void ServiceToUi::InternalSwap(ServiceToUi* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(ServiceToUi, _impl_.text_chat_)
-      + sizeof(ServiceToUi::_impl_.text_chat_)
+      PROTOBUF_FIELD_OFFSET(ServiceToUi, _impl_.video_recording_state_)
+      + sizeof(ServiceToUi::_impl_.video_recording_state_)
       - PROTOBUF_FIELD_OFFSET(ServiceToUi, _impl_.router_state_)>(
           reinterpret_cast<char*>(&_impl_.router_state_),
           reinterpret_cast<char*>(&other->_impl_.router_state_));

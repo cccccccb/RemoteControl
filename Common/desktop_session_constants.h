@@ -31,7 +31,6 @@ COMMON_EXPORT extern const char kPreferredSizeExtension[];
 COMMON_EXPORT extern const char kVideoRecordingExtension[];
 COMMON_EXPORT extern const char kPowerControlExtension[];
 COMMON_EXPORT extern const char kRemoteUpdateExtension[];
-COMMON_EXPORT extern const char kSystemInfoExtension[];
 COMMON_EXPORT extern const char kTaskManagerExtension[];
 COMMON_EXPORT extern const char kVideoPauseExtension[];
 COMMON_EXPORT extern const char kAudioPauseExtension[];

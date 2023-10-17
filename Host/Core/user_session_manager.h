@@ -53,7 +53,6 @@ public:
 
     bool start(Delegate* delegate);
     void onUserSessionEvent(base::win::SessionStatus status, base::SessionId session_id);
-    void onRouterStateChanged(const proto::internal::RouterState& router_state);
     void onHostIdChanged(const std::string& session_name, base::HostId host_id);
     void onSettingsChanged();
     void onClientSession(std::unique_ptr<ClientSession> client_session);

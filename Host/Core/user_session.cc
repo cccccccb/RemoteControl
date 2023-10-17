@@ -30,7 +30,6 @@
 #include "Base/strings/string_util.h"
 #include "Base/strings/unicode.h"
 #include "Host/Core/client_session_desktop.h"
-#include "Host/Core/client_session_text_chat.h"
 #include "Host/Core/desktop_session_proxy.h"
 
 #if defined(OS_WIN)
@@ -177,10 +176,7 @@ void UserSession::start(const proto::internal::RouterState& router_state)
         channel_->setListener(this);
         channel_->resume();
 
-        sendRouterState(FROM_HERE);
         sendCredentials(FROM_HERE);
-
-        onTextChatHasUser(FROM_HERE, true);
     }
     else
     {
@@ -221,14 +217,8 @@ void UserSession::restart(std::unique_ptr<base::IpcChannel> channel)
         };
 
         send_connection_list(desktop_clients_);
-        send_connection_list(file_transfer_clients_);
-        send_connection_list(system_info_clients_);
-        send_connection_list(text_chat_clients_);
 
-        sendRouterState(FROM_HERE);
         sendCredentials(FROM_HERE);
-
-        onTextChatHasUser(FROM_HERE, true);
     }
     else
     {
@@ -347,8 +337,7 @@ base::User UserSession::user() const
 //--------------------------------------------------------------------------------------------------
 size_t UserSession::clientsCount() const
 {
-    return desktop_clients_.size() + file_transfer_clients_.size() + system_info_clients_.size() +
-           text_chat_clients_.size();
+    return desktop_clients_.size();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -359,11 +348,6 @@ void UserSession::onClientSession(std::unique_ptr<ClientSession> client_session)
     bool confirm_required = true;
 
     proto::SessionType session_type = client_session->sessionType();
-    if (session_type == proto::SESSION_TYPE_SYSTEM_INFO)
-    {
-        LOG(LS_INFO) << "Confirmation for system info session NOT required (sid: " << session_id_ << ")";
-        confirm_required = false;
-    }
 
     if (connection_confirmation_ && confirm_required)
     {
@@ -516,24 +500,6 @@ void UserSession::onUserSessionEvent(base::win::SessionStatus status, base::Sess
             // Ignore other events.
         }
         break;
-    }
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSession::onRouterStateChanged(const proto::internal::RouterState& router_state)
-{
-    LOG(LS_INFO) << "Router state updated (sid: " << session_id_ << ")";
-    router_state_ = router_state;
-
-    sendRouterState(FROM_HERE);
-
-    if (router_state.state() == proto::internal::RouterState::CONNECTED)
-    {
-        sendHostIdRequest(FROM_HERE);
-    }
-    else
-    {
-        host_id_ = base::kInvalidHostId;
     }
 }
 
@@ -715,15 +681,6 @@ void UserSession::onIpcMessageReceived(const base::ByteArray& buffer)
             }
         }
     }
-    else if (incoming_message_.has_text_chat())
-    {
-        for (const auto& client : text_chat_clients_)
-        {
-            ClientSessionTextChat* text_chat_session =
-                static_cast<ClientSessionTextChat*>(client.get());
-            text_chat_session->sendTextChat(incoming_message_.text_chat());
-        }
-    }
     else
     {
         LOG(LS_WARNING) << "Unhandled message from UI (sid: " << session_id_ << ")";
@@ -762,7 +719,6 @@ void UserSession::onDesktopSessionStopped()
         LOG(LS_INFO) << "Session type is RDP. Disconnect all (sid: " << session_id_ << ")";
 
         desktop_clients_.clear();
-        file_transfer_clients_.clear();
 
         onSessionDettached(FROM_HERE);
     }
@@ -887,9 +843,6 @@ void UserSession::onClientSessionFinished()
                 LOG(LS_INFO) << "Client session with id " << client_session->sessionId()
                              << " finished. Delete it (sid: " << session_id_ << ")";
 
-                if (client_session->sessionType() == proto::SESSION_TYPE_TEXT_CHAT)
-                    onTextChatSessionFinished(client_session->id());
-
                 // Notification of the UI about disconnecting the client.
                 sendDisconnectEvent(client_session->id());
 
@@ -909,9 +862,6 @@ void UserSession::onClientSessionFinished()
     LOG(LS_INFO) << "Client session finished (sid: " << session_id_ << ")";
 
     delete_finished(&desktop_clients_);
-    delete_finished(&file_transfer_clients_);
-    delete_finished(&system_info_clients_);
-    delete_finished(&text_chat_clients_);
 
     if (desktop_clients_.empty())
     {
@@ -948,31 +898,6 @@ void UserSession::onClientSessionVideoRecording(
 }
 
 //--------------------------------------------------------------------------------------------------
-void UserSession::onClientSessionTextChat(uint32_t id, const proto::TextChat& text_chat)
-{
-    if (!channel_)
-    {
-        LOG(LS_INFO) << "IPC channel not exists (sid: " << session_id_ << ")";
-        return;
-    }
-
-    for (const auto& client : text_chat_clients_)
-    {
-        if (client->id() != id)
-        {
-            ClientSessionTextChat* text_chat_session =
-                static_cast<ClientSessionTextChat*>(client.get());
-            text_chat_session->sendTextChat(text_chat);
-        }
-    }
-
-    outgoing_message_.Clear();
-    outgoing_message_.mutable_text_chat()->CopyFrom(text_chat);
-    channel_->send(base::serialize(outgoing_message_));
-
-}
-
-//--------------------------------------------------------------------------------------------------
 void UserSession::onSessionDettached(const base::Location& location)
 {
     if (state_ == State::DETTACHED)
@@ -998,12 +923,6 @@ void UserSession::onSessionDettached(const base::Location& location)
         if (base::startsWith(client->userName(), "#"))
             client->stop();
     }
-
-    // Stop all file transfer clients.
-    for (const auto& client : file_transfer_clients_)
-        client->stop();
-
-    onTextChatHasUser(FROM_HERE, false);
 
     setState(FROM_HERE, State::DETTACHED);
 
@@ -1043,13 +962,6 @@ void UserSession::sendConnectEvent(const ClientSession& client_session)
     if (!channel_)
     {
         LOG(LS_WARNING) << "No active IPC channel (sid: " << session_id_ << ")";
-        return;
-    }
-
-    proto::SessionType session_type = client_session.sessionType();
-    if (session_type == proto::SESSION_TYPE_SYSTEM_INFO)
-    {
-        LOG(LS_INFO) << "Notify for system info session NOT required (sid: " << session_id_ << ")";
         return;
     }
 
@@ -1164,29 +1076,6 @@ void UserSession::killClientSession(uint32_t id)
     LOG(LS_INFO) << "Kill client session with ID: " << id << " (sid: " << session_id_ << ")";
 
     stop_by_id(&desktop_clients_, id);
-    stop_by_id(&file_transfer_clients_, id);
-    stop_by_id(&system_info_clients_, id);
-    stop_by_id(&text_chat_clients_, id);
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSession::sendRouterState(const base::Location& location)
-{
-    LOG(LS_INFO) << "Sending router state to UI (sid: " << session_id_
-                 << " from: " << location.toString() << ")";
-
-    if (!channel_)
-    {
-        LOG(LS_WARNING) << "No active IPC channel (sid: " << session_id_ << ")";
-        return;
-    }
-
-    LOG(LS_INFO) << "Router: " << router_state_.host_name() << ":" << router_state_.host_port();
-    LOG(LS_INFO) << "New state: " << routerStateToString(router_state_.state());
-
-    outgoing_message_.Clear();
-    outgoing_message_.mutable_router_state()->CopyFrom(router_state_);
-    channel_->send(base::serialize(outgoing_message_));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1234,27 +1123,6 @@ void UserSession::addNewClientSession(std::unique_ptr<ClientSession> client_sess
         }
         break;
 
-        case proto::SESSION_TYPE_FILE_TRANSFER:
-        {
-            LOG(LS_INFO) << "New file transfer session (sid: " << session_id_ << ")";
-            file_transfer_clients_.emplace_back(std::move(client_session));
-        }
-        break;
-
-        case proto::SESSION_TYPE_SYSTEM_INFO:
-        {
-            LOG(LS_INFO) << "New system info session (sid: " << session_id_ << ")";
-            system_info_clients_.emplace_back(std::move(client_session));
-        }
-        break;
-
-        case proto::SESSION_TYPE_TEXT_CHAT:
-        {
-            LOG(LS_INFO) << "New text chat session (sid: " << session_id_ << ")";
-            text_chat_clients_.emplace_back(std::move(client_session));
-        }
-        break;
-
         default:
         {
             NOTREACHED();
@@ -1268,20 +1136,6 @@ void UserSession::addNewClientSession(std::unique_ptr<ClientSession> client_sess
 
     // Notify the UI of a new connection.
     sendConnectEvent(*client_session_ptr);
-
-    if (client_session_ptr->sessionType() == proto::SESSION_TYPE_TEXT_CHAT)
-    {
-        onTextChatSessionStarted(client_session_ptr->id());
-
-        bool has_user = channel_ != nullptr;
-        for (const auto& client : text_chat_clients_)
-        {
-            ClientSessionTextChat* text_chat_client =
-                static_cast<ClientSessionTextChat*>(client.get());
-
-            text_chat_client->setHasUser(has_user);
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -1290,109 +1144,6 @@ void UserSession::setState(const base::Location& location, State state)
     LOG(LS_INFO) << "State changed from " << stateToString(state_) << " to " << stateToString(state)
                  << " (sid: " << session_id_ << " from: " << location.toString() << ")";
     state_ = state;
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSession::onTextChatHasUser(const base::Location& location, bool has_user)
-{
-    LOG(LS_INFO) << "User state changed: " << has_user << " (sid: " << session_id_
-                 << " from: " << location.toString() << ")";
-
-    for (const auto& client : text_chat_clients_)
-    {
-        ClientSessionTextChat* text_chat_client =
-            static_cast<ClientSessionTextChat*>(client.get());
-
-        proto::TextChatStatus::Status status = proto::TextChatStatus::STATUS_USER_CONNECTED;
-        if (!has_user)
-            status = proto::TextChatStatus::STATUS_USER_DISCONNECTED;
-
-        text_chat_client->setHasUser(has_user);
-        text_chat_client->sendStatus(status);
-    }
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSession::onTextChatSessionStarted(uint32_t id)
-{
-    outgoing_message_.Clear();
-
-    for (const auto& client : text_chat_clients_)
-    {
-        if (client->id() == id)
-        {
-            ClientSessionTextChat* text_chat_client =
-                static_cast<ClientSessionTextChat*>(client.get());
-
-            if (!channel_)
-                text_chat_client->sendStatus(proto::TextChatStatus::STATUS_USER_DISCONNECTED);
-
-            proto::TextChatStatus* text_chat_status =
-                 outgoing_message_.mutable_text_chat()->mutable_chat_status();
-            text_chat_status->set_status(proto::TextChatStatus::STATUS_STARTED);
-            text_chat_status->set_source(text_chat_client->computerName());
-
-            break;
-        }
-    }
-
-    for (const auto& client : text_chat_clients_)
-    {
-        if (client->id() != id)
-        {
-            ClientSessionTextChat* text_chat_session =
-                static_cast<ClientSessionTextChat*>(client.get());
-            text_chat_session->sendTextChat(outgoing_message_.text_chat());
-        }
-    }
-
-    if (!channel_)
-    {
-        LOG(LS_INFO) << "IPC channel not exists (sid: " << session_id_ << ")";
-        return;
-    }
-
-    channel_->send(base::serialize(outgoing_message_));
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSession::onTextChatSessionFinished(uint32_t id)
-{
-    outgoing_message_.Clear();
-
-    for (const auto& client : text_chat_clients_)
-    {
-        if (client->id() == id)
-        {
-            ClientSessionTextChat* text_chat_session =
-                static_cast<ClientSessionTextChat*>(client.get());
-
-            proto::TextChatStatus* text_chat_status =
-                outgoing_message_.mutable_text_chat()->mutable_chat_status();
-            text_chat_status->set_status(proto::TextChatStatus::STATUS_STOPPED);
-            text_chat_status->set_source(text_chat_session->computerName());
-
-            break;
-        }
-    }
-
-    for (const auto& client : text_chat_clients_)
-    {
-        if (client->id() != id)
-        {
-            ClientSessionTextChat* text_chat_session =
-                static_cast<ClientSessionTextChat*>(client.get());
-            text_chat_session->sendTextChat(outgoing_message_.text_chat());
-        }
-    }
-
-    if (!channel_)
-    {
-        LOG(LS_INFO) << "IPC channel not exists (sid: " << session_id_ << ")";
-        return;
-    }
-
-    channel_->send(base::serialize(outgoing_message_));
 }
 
 //--------------------------------------------------------------------------------------------------

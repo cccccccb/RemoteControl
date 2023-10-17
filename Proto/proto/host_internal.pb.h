@@ -30,7 +30,6 @@
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
 #include <google/protobuf/generated_enum_util.h>
 #include "common.pb.h"
-#include "text_chat.pb.h"
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 #define PROTOBUF_INTERNAL_EXPORT_host_5finternal_2eproto
@@ -1795,7 +1794,6 @@ class UiToService final :
     kCredentialsRequestFieldNumber = 1,
     kConnectConfirmationFieldNumber = 2,
     kControlFieldNumber = 3,
-    kTextChatFieldNumber = 4,
   };
   // .proto.internal.CredentialsRequest credentials_request = 1;
   bool has_credentials_request() const;
@@ -1851,24 +1849,6 @@ class UiToService final :
       ::proto::internal::ServiceControl* control);
   ::proto::internal::ServiceControl* unsafe_arena_release_control();
 
-  // .proto.TextChat text_chat = 4;
-  bool has_text_chat() const;
-  private:
-  bool _internal_has_text_chat() const;
-  public:
-  void clear_text_chat();
-  const ::proto::TextChat& text_chat() const;
-  PROTOBUF_NODISCARD ::proto::TextChat* release_text_chat();
-  ::proto::TextChat* mutable_text_chat();
-  void set_allocated_text_chat(::proto::TextChat* text_chat);
-  private:
-  const ::proto::TextChat& _internal_text_chat() const;
-  ::proto::TextChat* _internal_mutable_text_chat();
-  public:
-  void unsafe_arena_set_allocated_text_chat(
-      ::proto::TextChat* text_chat);
-  ::proto::TextChat* unsafe_arena_release_text_chat();
-
   // @@protoc_insertion_point(class_scope:proto.internal.UiToService)
  private:
   class _Internal;
@@ -1880,7 +1860,6 @@ class UiToService final :
     ::proto::internal::CredentialsRequest* credentials_request_;
     ::proto::internal::ConnectConfirmation* connect_confirmation_;
     ::proto::internal::ServiceControl* control_;
-    ::proto::TextChat* text_chat_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1997,7 +1976,6 @@ class ServiceToUi final :
     kDisconnectEventFieldNumber = 4,
     kConnectConfirmationRequestFieldNumber = 5,
     kVideoRecordingStateFieldNumber = 6,
-    kTextChatFieldNumber = 7,
   };
   // .proto.internal.RouterState router_state = 1;
   bool has_router_state() const;
@@ -2107,24 +2085,6 @@ class ServiceToUi final :
       ::proto::internal::VideoRecordingState* video_recording_state);
   ::proto::internal::VideoRecordingState* unsafe_arena_release_video_recording_state();
 
-  // .proto.TextChat text_chat = 7;
-  bool has_text_chat() const;
-  private:
-  bool _internal_has_text_chat() const;
-  public:
-  void clear_text_chat();
-  const ::proto::TextChat& text_chat() const;
-  PROTOBUF_NODISCARD ::proto::TextChat* release_text_chat();
-  ::proto::TextChat* mutable_text_chat();
-  void set_allocated_text_chat(::proto::TextChat* text_chat);
-  private:
-  const ::proto::TextChat& _internal_text_chat() const;
-  ::proto::TextChat* _internal_mutable_text_chat();
-  public:
-  void unsafe_arena_set_allocated_text_chat(
-      ::proto::TextChat* text_chat);
-  ::proto::TextChat* unsafe_arena_release_text_chat();
-
   // @@protoc_insertion_point(class_scope:proto.internal.ServiceToUi)
  private:
   class _Internal;
@@ -2139,7 +2099,6 @@ class ServiceToUi final :
     ::proto::internal::DisconnectEvent* disconnect_event_;
     ::proto::internal::ConnectConfirmationRequest* connect_confirmation_request_;
     ::proto::internal::VideoRecordingState* video_recording_state_;
-    ::proto::TextChat* text_chat_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -3292,91 +3251,6 @@ inline void UiToService::set_allocated_control(::proto::internal::ServiceControl
   // @@protoc_insertion_point(field_set_allocated:proto.internal.UiToService.control)
 }
 
-// .proto.TextChat text_chat = 4;
-inline bool UiToService::_internal_has_text_chat() const {
-  return this != internal_default_instance() && _impl_.text_chat_ != nullptr;
-}
-inline bool UiToService::has_text_chat() const {
-  return _internal_has_text_chat();
-}
-inline const ::proto::TextChat& UiToService::_internal_text_chat() const {
-  const ::proto::TextChat* p = _impl_.text_chat_;
-  return p != nullptr ? *p : reinterpret_cast<const ::proto::TextChat&>(
-      ::proto::_TextChat_default_instance_);
-}
-inline const ::proto::TextChat& UiToService::text_chat() const {
-  // @@protoc_insertion_point(field_get:proto.internal.UiToService.text_chat)
-  return _internal_text_chat();
-}
-inline void UiToService::unsafe_arena_set_allocated_text_chat(
-    ::proto::TextChat* text_chat) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.text_chat_);
-  }
-  _impl_.text_chat_ = text_chat;
-  if (text_chat) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:proto.internal.UiToService.text_chat)
-}
-inline ::proto::TextChat* UiToService::release_text_chat() {
-  
-  ::proto::TextChat* temp = _impl_.text_chat_;
-  _impl_.text_chat_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::proto::TextChat* UiToService::unsafe_arena_release_text_chat() {
-  // @@protoc_insertion_point(field_release:proto.internal.UiToService.text_chat)
-  
-  ::proto::TextChat* temp = _impl_.text_chat_;
-  _impl_.text_chat_ = nullptr;
-  return temp;
-}
-inline ::proto::TextChat* UiToService::_internal_mutable_text_chat() {
-  
-  if (_impl_.text_chat_ == nullptr) {
-    auto* p = CreateMaybeMessage<::proto::TextChat>(GetArenaForAllocation());
-    _impl_.text_chat_ = p;
-  }
-  return _impl_.text_chat_;
-}
-inline ::proto::TextChat* UiToService::mutable_text_chat() {
-  ::proto::TextChat* _msg = _internal_mutable_text_chat();
-  // @@protoc_insertion_point(field_mutable:proto.internal.UiToService.text_chat)
-  return _msg;
-}
-inline void UiToService::set_allocated_text_chat(::proto::TextChat* text_chat) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.text_chat_);
-  }
-  if (text_chat) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(
-                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(text_chat));
-    if (message_arena != submessage_arena) {
-      text_chat = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, text_chat, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  _impl_.text_chat_ = text_chat;
-  // @@protoc_insertion_point(field_set_allocated:proto.internal.UiToService.text_chat)
-}
-
 // -------------------------------------------------------------------
 
 // ServiceToUi
@@ -3919,91 +3793,6 @@ inline void ServiceToUi::set_allocated_video_recording_state(::proto::internal::
   }
   _impl_.video_recording_state_ = video_recording_state;
   // @@protoc_insertion_point(field_set_allocated:proto.internal.ServiceToUi.video_recording_state)
-}
-
-// .proto.TextChat text_chat = 7;
-inline bool ServiceToUi::_internal_has_text_chat() const {
-  return this != internal_default_instance() && _impl_.text_chat_ != nullptr;
-}
-inline bool ServiceToUi::has_text_chat() const {
-  return _internal_has_text_chat();
-}
-inline const ::proto::TextChat& ServiceToUi::_internal_text_chat() const {
-  const ::proto::TextChat* p = _impl_.text_chat_;
-  return p != nullptr ? *p : reinterpret_cast<const ::proto::TextChat&>(
-      ::proto::_TextChat_default_instance_);
-}
-inline const ::proto::TextChat& ServiceToUi::text_chat() const {
-  // @@protoc_insertion_point(field_get:proto.internal.ServiceToUi.text_chat)
-  return _internal_text_chat();
-}
-inline void ServiceToUi::unsafe_arena_set_allocated_text_chat(
-    ::proto::TextChat* text_chat) {
-  if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.text_chat_);
-  }
-  _impl_.text_chat_ = text_chat;
-  if (text_chat) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:proto.internal.ServiceToUi.text_chat)
-}
-inline ::proto::TextChat* ServiceToUi::release_text_chat() {
-  
-  ::proto::TextChat* temp = _impl_.text_chat_;
-  _impl_.text_chat_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  if (GetArenaForAllocation() == nullptr) { delete old; }
-#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
-  if (GetArenaForAllocation() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-  return temp;
-}
-inline ::proto::TextChat* ServiceToUi::unsafe_arena_release_text_chat() {
-  // @@protoc_insertion_point(field_release:proto.internal.ServiceToUi.text_chat)
-  
-  ::proto::TextChat* temp = _impl_.text_chat_;
-  _impl_.text_chat_ = nullptr;
-  return temp;
-}
-inline ::proto::TextChat* ServiceToUi::_internal_mutable_text_chat() {
-  
-  if (_impl_.text_chat_ == nullptr) {
-    auto* p = CreateMaybeMessage<::proto::TextChat>(GetArenaForAllocation());
-    _impl_.text_chat_ = p;
-  }
-  return _impl_.text_chat_;
-}
-inline ::proto::TextChat* ServiceToUi::mutable_text_chat() {
-  ::proto::TextChat* _msg = _internal_mutable_text_chat();
-  // @@protoc_insertion_point(field_mutable:proto.internal.ServiceToUi.text_chat)
-  return _msg;
-}
-inline void ServiceToUi::set_allocated_text_chat(::proto::TextChat* text_chat) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.text_chat_);
-  }
-  if (text_chat) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(
-                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(text_chat));
-    if (message_arena != submessage_arena) {
-      text_chat = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, text_chat, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  _impl_.text_chat_ = text_chat;
-  // @@protoc_insertion_point(field_set_allocated:proto.internal.ServiceToUi.text_chat)
 }
 
 #ifdef __GNUC__

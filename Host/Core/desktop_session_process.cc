@@ -34,6 +34,7 @@
 #include <UserEnv.h>
 
 #pragma comment(lib, "Advapi32.lib")
+#pragma comment(lib, "userenv.lib")
 #endif // defined(OS_WIN)
 
 #if defined(OS_LINUX)

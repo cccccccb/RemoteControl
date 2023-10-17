@@ -21,14 +21,10 @@
 #include "BuildConfig/version.h"
 #include "Base/optional.hpp"
 #include "config_factory.h"
-#include "router_config_storage.h"
 #include "ui/application.h"
 #include "ui/client_settings.h"
 #include "ui/client_window.h"
 #include "ui/desktop/qt_desktop_window.h"
-#include "ui/file_transfer/qt_file_manager_window.h"
-#include "ui/sys_info/qt_system_info_window.h"
-#include "ui/text_chat/qt_text_chat_window.h"
 #include "QtBase/scoped_qt_logging.h"
 
 #if defined(OS_WIN)
@@ -377,13 +373,6 @@ bool parseBlockRemoteInputValue(const QString& value, proto::DesktopConfig& conf
 //--------------------------------------------------------------------------------------------------
 int clientMain(int argc, char* argv[])
 {
-//#if !defined(I18L_DISABLED)
-//    Q_INIT_RESOURCE(client);
-//    Q_INIT_RESOURCE(client_translations);
-//    Q_INIT_RESOURCE(common);
-//    Q_INIT_RESOURCE(common_translations);
-//#endif
-
 #if defined(OS_WIN)
     base::installFailureHandler(L"RemoteControlClient");
 #endif
@@ -398,7 +387,7 @@ int clientMain(int argc, char* argv[])
 
     client::Application application(argc, argv);
 
-    qInfo() << "Version: " << ASPIA_VERSION_STRING;
+    qInfo() << "Version: " << REMOTECONTROL_VERSION_STRING;
 #if defined(GIT_CURRENT_BRANCH) && defined(GIT_COMMIT_HASH)
     qInfo() << "Git branch: " << GIT_CURRENT_BRANCH;
     qInfo() << "Git commit: " << GIT_COMMIT_HASH;
@@ -559,18 +548,6 @@ int clientMain(int argc, char* argv[])
             config.session_type = proto::SESSION_TYPE_DESKTOP_VIEW;
             desktop_config = client::ConfigFactory::defaultDesktopViewConfig();
         }
-        else if (session_type == "file-transfer")
-        {
-            config.session_type = proto::SESSION_TYPE_FILE_TRANSFER;
-        }
-        else if (session_type == "system-info")
-        {
-            config.session_type = proto::SESSION_TYPE_SYSTEM_INFO;
-        }
-        else if (session_type == "text-chat")
-        {
-            config.session_type = proto::SESSION_TYPE_TEXT_CHAT;
-        }
         else
         {
             onInvalidValue("session-type",
@@ -626,69 +603,11 @@ int clientMain(int argc, char* argv[])
         if (base::isHostId(config.address_or_id))
         {
             qInfo() << "Relay connection selected";
-
-            client::RouterConfig router_config = client::RouterConfigStorage().routerConfig();
-
-            if (parser.isSet(router_address_option))
-            {
-                router_config.address = parser.value(router_address_option).toStdU16String();
-                router_config.port = parser.value(router_port_option).toUShort();
-                router_config.username = parser.value(router_username_option).toStdU16String();
-                router_config.password = parser.value(router_password_option).toStdU16String();
-            }
-
-            if (!router_config.isValid())
-            {
-                QString title = QApplication::translate("Client", "Warning");
-                QString message = QApplication::translate("Client",
-                    "A host ID was entered, but the router was not configured. You need to "
-                    "configure your router before connecting.");
-                QMessageBox::warning(nullptr, title, message, QMessageBox::Ok);
-                return 1;
-            }
-
-            config.router_config = router_config;
         }
         else
         {
             qInfo() << "Direct connection selected";
         }
-
-        client::SessionWindow* session_window = nullptr;
-
-        switch (config.session_type)
-        {
-            case proto::SESSION_TYPE_DESKTOP_MANAGE:
-                session_window = new client::QtDesktopWindow(config.session_type, *desktop_config);
-                break;
-
-            case proto::SESSION_TYPE_DESKTOP_VIEW:
-                session_window = new client::QtDesktopWindow(config.session_type, *desktop_config);
-                break;
-
-            case proto::SESSION_TYPE_FILE_TRANSFER:
-                session_window = new client::QtFileManagerWindow();
-                break;
-
-            case proto::SESSION_TYPE_SYSTEM_INFO:
-                session_window = new client::QtSystemInfoWindow();
-                break;
-
-            case proto::SESSION_TYPE_TEXT_CHAT:
-                session_window = new client::QtTextChatWindow();
-                break;
-
-            default:
-                NOTREACHED();
-                break;
-        }
-
-        if (!session_window)
-            return 1;
-
-        session_window->setAttribute(Qt::WA_DeleteOnClose);
-        if (!session_window->connectToHost(config))
-            return 0;
     }
     else
     {

@@ -73,7 +73,6 @@ DesktopToolBar::DesktopToolBar(proto::SessionType session_type, QWidget* parent)
     connect(ui.action_fullscreen, &QAction::triggered, this, &DesktopToolBar::onFullscreenButton);
     connect(ui.action_autoscroll, &QAction::triggered, this, &DesktopToolBar::sig_autoScrollChanged);
     connect(ui.action_update, &QAction::triggered, this, &DesktopToolBar::sig_startRemoteUpdate);
-    connect(ui.action_system_info, &QAction::triggered, this, &DesktopToolBar::sig_startSystemInfo);
     connect(ui.action_task_manager, &QAction::triggered, this, &DesktopToolBar::sig_startTaskManager);
     connect(ui.action_statistics, &QAction::triggered, this, &DesktopToolBar::sig_startStatistics);
     connect(ui.action_minimize, &QAction::triggered, this, &DesktopToolBar::sig_minimizeSession);
@@ -90,16 +89,6 @@ DesktopToolBar::DesktopToolBar(proto::SessionType session_type, QWidget* parent)
         DCHECK(session_type == proto::SESSION_TYPE_DESKTOP_VIEW);
         ui.action_cad->setVisible(false);
     }
-
-    connect(ui.action_file_transfer, &QAction::triggered, this, [this]()
-    {
-        emit sig_startSession(proto::SESSION_TYPE_FILE_TRANSFER);
-    });
-
-    connect(ui.action_text_chat, &QAction::triggered, this, [this]()
-    {
-        emit sig_startSession(proto::SESSION_TYPE_TEXT_CHAT);
-    });
 
     bool is_pinned = settings.isToolBarPinned();
 
@@ -168,22 +157,6 @@ void DesktopToolBar::enablePowerControl(bool enable)
         connect(power_menu_.get(), &QMenu::aboutToHide, this, &DesktopToolBar::onMenuHide);
     }
 
-    updateSize();
-}
-
-//--------------------------------------------------------------------------------------------------
-void DesktopToolBar::enableSystemInfo(bool enable)
-{
-    ui.action_system_info->setVisible(enable);
-    ui.action_system_info->setEnabled(enable);
-    updateSize();
-}
-
-//--------------------------------------------------------------------------------------------------
-void DesktopToolBar::enableTextChat(bool enable)
-{
-    ui.action_text_chat->setVisible(enable);
-    ui.action_text_chat->setEnabled(enable);
     updateSize();
 }
 

@@ -24,7 +24,6 @@ syntax = "proto3";
 option optimize_for = LITE_RUNTIME;
 
 import "common.proto";
-import "text_chat.proto";
 
 package proto.internal;
 
@@ -123,7 +122,6 @@ message UiToService
     CredentialsRequest credentials_request = 1;
     ConnectConfirmation connect_confirmation = 2;
     ServiceControl control = 3;
-    TextChat text_chat = 4;
 }
 
 message ServiceToUi
@@ -134,5 +132,4 @@ message ServiceToUi
     DisconnectEvent disconnect_event = 4;
     ConnectConfirmationRequest connect_confirmation_request = 5;
     VideoRecordingState video_recording_state = 6;
-    TextChat text_chat = 7;
 }

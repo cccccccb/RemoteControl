@@ -21,15 +21,11 @@
 #include "Base/logging.h"
 #include "Base/net/address.h"
 #include "BuildConfig/build_config.h"
-#include "Client/Core/router_config_storage.h"
 #include "Client/Core/ui/application.h"
 #include "Client/Core/ui/client_settings.h"
 #include "Client/Core/ui/client_settings_dialog.h"
 #include "Client/Core/ui/desktop/desktop_config_dialog.h"
 #include "Client/Core/ui/desktop/qt_desktop_window.h"
-#include "Client/Core/ui/file_transfer/qt_file_manager_window.h"
-#include "Client/Core/ui/sys_info/qt_system_info_window.h"
-#include "Client/Core/ui/text_chat/qt_text_chat_window.h"
 #include "Client/Core/ui/update_settings_dialog.h"
 #include "Common/desktop_session_constants.h"
 #include "Common/ui/about_dialog.h"
@@ -248,7 +244,6 @@ void ClientWindow::sessionConfigButtonPressed()
 //--------------------------------------------------------------------------------------------------
 void ClientWindow::connectToHost()
 {
-    RouterConfig router_config = RouterConfigStorage().routerConfig();
     Config config;
 
     QComboBox* combo_address = ui.combo_address;
@@ -290,16 +285,6 @@ void ClientWindow::connectToHost()
     {
         qInfo() << "Relay connection selected";
 
-        if (!router_config.isValid())
-        {
-            QMessageBox::warning(this,
-                                 tr("Warning"),
-                                 tr("A host ID was entered, but the router was not configured. "
-                                    "You need to configure your router before connecting."),
-                                 QMessageBox::Ok);
-            return;
-        }
-
         config.address_or_id = current_address_u16;
     }
 
@@ -317,9 +302,6 @@ void ClientWindow::connectToHost()
     ClientSettings& settings = Application::instance()->settings();
     settings.setAddressList(address_list);
 
-    if (host_id_entered)
-        config.router_config = std::move(router_config);
-
     config.session_type = static_cast<proto::SessionType>(
         ui.combo_session_type->currentData().toInt());
 
@@ -333,18 +315,6 @@ void ClientWindow::connectToHost()
 
         case proto::SESSION_TYPE_DESKTOP_VIEW:
             session_window = new QtDesktopWindow(config.session_type, settings.desktopViewConfig());
-            break;
-
-        case proto::SESSION_TYPE_FILE_TRANSFER:
-            session_window = new client::QtFileManagerWindow();
-            break;
-
-        case proto::SESSION_TYPE_SYSTEM_INFO:
-            session_window = new client::QtSystemInfoWindow();
-            break;
-
-        case proto::SESSION_TYPE_TEXT_CHAT:
-            session_window = new client::QtTextChatWindow();
             break;
 
         default:
@@ -406,9 +376,6 @@ void ClientWindow::reloadSessionTypes()
 
     add_session(QStringLiteral(":/img/monitor-keyboard.png"), proto::SESSION_TYPE_DESKTOP_MANAGE);
     add_session(QStringLiteral(":/img/monitor.png"), proto::SESSION_TYPE_DESKTOP_VIEW);
-    add_session(QStringLiteral(":/img/folder-stand.png"), proto::SESSION_TYPE_FILE_TRANSFER);
-    add_session(QStringLiteral(":/img/computer_info.png"), proto::SESSION_TYPE_SYSTEM_INFO);
-    add_session(QStringLiteral(":/img/text-chat.png"), proto::SESSION_TYPE_TEXT_CHAT);
 
     int item_index = combobox->findData(QVariant(current_session_type));
     if (item_index != -1)

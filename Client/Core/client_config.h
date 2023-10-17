@@ -19,7 +19,6 @@
 #ifndef CLIENT_CLIENT_CONFIG_H
 #define CLIENT_CLIENT_CONFIG_H
 
-#include "Client/Core/router_config.h"
 #include "Base/optional.hpp"
 #include "proto/common.pb.h"
 
@@ -31,8 +30,6 @@ struct Config
 {
     Config();
     ~Config();
-
-    tl::optional<RouterConfig> router_config;
 
     std::u16string computer_name;
     std::u16string address_or_id;

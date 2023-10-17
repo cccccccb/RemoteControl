@@ -206,20 +206,6 @@ void DesktopControlProxy::onRemoteUpdate()
 }
 
 //--------------------------------------------------------------------------------------------------
-void DesktopControlProxy::onSystemInfoRequest(const proto::system_info::SystemInfoRequest& request)
-{
-    if (!io_task_runner_->belongsToCurrentThread())
-    {
-        io_task_runner_->postTask(
-            std::bind(&DesktopControlProxy::onSystemInfoRequest, shared_from_this(), request));
-        return;
-    }
-
-    if (desktop_control_)
-        desktop_control_->onSystemInfoRequest(request);
-}
-
-//--------------------------------------------------------------------------------------------------
 void DesktopControlProxy::onTaskManager(const proto::task_manager::ClientToHost& message)
 {
     if (!io_task_runner_->belongsToCurrentThread())

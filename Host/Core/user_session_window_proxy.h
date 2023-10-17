@@ -45,7 +45,6 @@ public:
     void onConnectConfirmationRequest(const proto::internal::ConnectConfirmationRequest& request);
     void onVideoRecordingStateChanged(
         const std::string& computer_name, const std::string& user_name, bool started);
-    void onTextChat(const proto::TextChat& text_chat);
 
 private:
     std::shared_ptr<base::TaskRunner> ui_task_runner_;

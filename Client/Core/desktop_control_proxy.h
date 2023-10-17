@@ -24,7 +24,6 @@
 
 #include "proto/desktop.pb.h"
 #include "proto/desktop_extensions.pb.h"
-#include "proto/system_info.pb.h"
 #include "proto/task_manager.pb.h"
 
 
@@ -56,7 +55,6 @@ public:
     void onMouseEvent(const proto::MouseEvent& event);
     void onPowerControl(proto::PowerControl::Action action);
     void onRemoteUpdate();
-    void onSystemInfoRequest(const proto::system_info::SystemInfoRequest& request);
     void onTaskManager(const proto::task_manager::ClientToHost& message);
     void onMetricsRequest();
 

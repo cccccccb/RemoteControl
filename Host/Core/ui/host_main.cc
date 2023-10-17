@@ -98,7 +98,7 @@ int hostMain(int argc, char* argv[])
     qt_base::ScopedQtLogging scoped_logging(logging_settings);
     base::CommandLine command_line(argc, argv);
 
-    LOG(LS_INFO) << "Version: " << ASPIA_VERSION_STRING;
+    LOG(LS_INFO) << "Version: " << REMOTECONTROL_VERSION_STRING;
 #if defined(GIT_CURRENT_BRANCH) && defined(GIT_COMMIT_HASH)
     LOG(LS_INFO) << "Git branch: " << GIT_CURRENT_BRANCH;
     LOG(LS_INFO) << "Git commit: " << GIT_COMMIT_HASH;

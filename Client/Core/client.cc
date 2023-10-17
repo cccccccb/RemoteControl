@@ -73,18 +73,8 @@ void Client::start(const Config& config)
     {
         qInfo() << "Starting RELAY connection";
 
-        if (!config_.router_config.has_value())
-        {
-            LOG(LS_FATAL) << "No router config. Continuation is impossible";
-            return;
-        }
-
         // Show the status window.
         status_window_proxy_->onStarted(config_.address_or_id);
-
-        router_controller_ =
-            std::make_unique<RouterController>(*config_.router_config, io_task_runner_);
-        router_controller_->connectTo(base::stringToHostId(config_.address_or_id), this);
     }
     else
     {
@@ -115,7 +105,6 @@ void Client::stop()
         qInfo() << "Stopping client...";
         state_ = State::STOPPPED;
 
-        router_controller_.reset();
         authenticator_.reset();
         channel_.reset();
 
@@ -262,27 +251,6 @@ void Client::onTcpMessageWritten(uint8_t channel_id, size_t pending)
     {
         qWarning() << "Unhandled outgoing message from channel: " << channel_id;
     }
-}
-
-//--------------------------------------------------------------------------------------------------
-void Client::onHostConnected(std::unique_ptr<base::TcpChannel> channel)
-{
-    qInfo() << "Host connected";
-    DCHECK(channel);
-
-    channel_ = std::move(channel);
-    channel_->setListener(this);
-
-    startAuthentication();
-
-    // Router controller is no longer needed.
-    io_task_runner_->deleteSoon(std::move(router_controller_));
-}
-
-//--------------------------------------------------------------------------------------------------
-void Client::onErrorOccurred(const RouterController::Error& error)
-{
-    status_window_proxy_->onRouterError(error);
 }
 
 //--------------------------------------------------------------------------------------------------

@@ -1,9 +1,6 @@
 SOURCE_HOST_CORE_HEADERS +=                                 \
     $${_PRO_FILE_PWD_}/client_session.h                     \
     $${_PRO_FILE_PWD_}/client_session_desktop.h             \
-    $${_PRO_FILE_PWD_}/client_session_file_transfer.h       \
-    $${_PRO_FILE_PWD_}/client_session_system_info.h         \
-    $${_PRO_FILE_PWD_}/client_session_text_chat.h           \
     $${_PRO_FILE_PWD_}/desktop_agent_main.h                 \
     $${_PRO_FILE_PWD_}/desktop_session.h                    \
     $${_PRO_FILE_PWD_}/desktop_session_manager.h            \
@@ -12,14 +9,11 @@ SOURCE_HOST_CORE_HEADERS +=                                 \
     $${_PRO_FILE_PWD_}/desktop_session_ipc.h                \
     $${_PRO_FILE_PWD_}/desktop_session_proxy.h              \
     $${_PRO_FILE_PWD_}/desktop_session_process.h            \
-    $${_PRO_FILE_PWD_}/file_transfer_agent.h                \
-    $${_PRO_FILE_PWD_}/file_transfer_agent_main.h           \
     $${_PRO_FILE_PWD_}/host_export.h                        \
     $${_PRO_FILE_PWD_}/host_ipc_storage.h                   \
     $${_PRO_FILE_PWD_}/host_key_storage.h                   \
     $${_PRO_FILE_PWD_}/input_injector.h                     \
     $${_PRO_FILE_PWD_}/integrity_check.h                    \
-    $${_PRO_FILE_PWD_}/router_controller.h                  \
     $${_PRO_FILE_PWD_}/server.h                             \
     $${_PRO_FILE_PWD_}/service.h                            \
     $${_PRO_FILE_PWD_}/service_constants.h                  \
@@ -34,7 +28,6 @@ SOURCE_HOST_CORE_HEADERS +=                                 \
     $${_PRO_FILE_PWD_}/user_session_window_proxy.h          \
     $${_PRO_FILE_PWD_}/input_injector_win.h                 \
     $${_PRO_FILE_PWD_}/process_monitor.h                    \
-    $${_PRO_FILE_PWD_}/system_info.h                        \
     $${_PRO_FILE_PWD_}/task_manager.h                       \
     $${_PRO_FILE_PWD_}/win/sas_injector.h                   \
     $${_PRO_FILE_PWD_}/win/updater_launcher.h               \
@@ -42,9 +35,6 @@ SOURCE_HOST_CORE_HEADERS +=                                 \
 SOURCE_HOST_CORE_SOURECES +=                                \
     $${_PRO_FILE_PWD_}/client_session.cc                    \
     $${_PRO_FILE_PWD_}/client_session_desktop.cc            \
-    $${_PRO_FILE_PWD_}/client_session_file_transfer.cc      \
-    $${_PRO_FILE_PWD_}/client_session_system_info.cc        \
-    $${_PRO_FILE_PWD_}/client_session_text_chat.cc          \
     $${_PRO_FILE_PWD_}/desktop_agent_main.cc                \
     $${_PRO_FILE_PWD_}/desktop_session.cc                   \
     $${_PRO_FILE_PWD_}/desktop_session_manager.cc           \
@@ -53,12 +43,9 @@ SOURCE_HOST_CORE_SOURECES +=                                \
     $${_PRO_FILE_PWD_}/desktop_session_ipc.cc               \
     $${_PRO_FILE_PWD_}/desktop_session_process.cc           \
     $${_PRO_FILE_PWD_}/desktop_session_proxy.cc             \
-    $${_PRO_FILE_PWD_}/file_transfer_agent.cc               \
-    $${_PRO_FILE_PWD_}/file_transfer_agent_main.cc          \
     $${_PRO_FILE_PWD_}/host_ipc_storage.cc                  \
     $${_PRO_FILE_PWD_}/host_key_storage.cc                  \
     $${_PRO_FILE_PWD_}/integrity_check.cc                   \
-    $${_PRO_FILE_PWD_}/router_controller.cc                 \
     $${_PRO_FILE_PWD_}/server.cc                            \
     $${_PRO_FILE_PWD_}/service.cc                           \
     $${_PRO_FILE_PWD_}/service_constants.cc                 \
@@ -72,7 +59,6 @@ SOURCE_HOST_CORE_SOURECES +=                                \
     $${_PRO_FILE_PWD_}/user_session_window_proxy.cc         \
     $${_PRO_FILE_PWD_}/input_injector_win.cc                \
     $${_PRO_FILE_PWD_}/process_monitor.cc                   \
-    $${_PRO_FILE_PWD_}/system_info.cc                       \
     $${_PRO_FILE_PWD_}/task_manager.cc                      \
     $${_PRO_FILE_PWD_}/win/sas_injector.cc                  \
     $${_PRO_FILE_PWD_}/win/updater_launcher.cc              \

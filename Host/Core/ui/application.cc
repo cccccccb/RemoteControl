@@ -89,7 +89,7 @@ Application::Application(int& argc, char* argv[])
 
     setOrganizationName("Aspia");
     setApplicationName("Host");
-    setApplicationVersion(ASPIA_VERSION_STRING);
+    setApplicationVersion(REMOTECONTROL_VERSION_STRING);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     setAttribute(Qt::AA_DisableWindowContextHelpButton, true);
 #endif

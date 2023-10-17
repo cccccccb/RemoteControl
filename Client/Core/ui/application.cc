@@ -29,9 +29,8 @@ namespace client {
 Application::Application(int& argc, char* argv[])
     : qt_base::Application(argc, argv)
 {
-    setOrganizationName("Aspia");
     setApplicationName("Client");
-    setApplicationVersion(ASPIA_VERSION_STRING);
+    setApplicationVersion(REMOTECONTROL_VERSION_STRING);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     setAttribute(Qt::AA_DisableWindowContextHelpButton, true);
 #endif

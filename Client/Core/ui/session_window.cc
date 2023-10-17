@@ -64,7 +64,6 @@ bool SessionWindow::connectToHost(Config config)
 
         AuthorizationDialog auth_dialog(this);
 
-        auth_dialog.setOneTimePasswordEnabled(config.router_config.has_value());
 		auth_dialog.setUserName(QString::fromStdU16String(config.username));
         auth_dialog.setPassword(QString::fromStdU16String(config.password));
 
@@ -186,39 +185,6 @@ void SessionWindow::onAccessDenied(base::ClientAuthenticator::ErrorCode error_co
 }
 
 //--------------------------------------------------------------------------------------------------
-void SessionWindow::onRouterError(const RouterController::Error& error)
-{
-    qInfo() << "Router error";
-
-    switch (error.type)
-    {
-        case RouterController::ErrorType::NETWORK:
-        {
-            onErrorOccurred(tr("Network error when connecting to the router: %1")
-                            .arg(netErrorToString(error.code.network)));
-        }
-        break;
-
-        case RouterController::ErrorType::AUTHENTICATION:
-        {
-            onErrorOccurred(tr("Authentication error when connecting to the router: %1")
-                            .arg(authErrorToString(error.code.authentication)));
-        }
-        break;
-
-        case RouterController::ErrorType::ROUTER:
-        {
-            onErrorOccurred(routerErrorToString(error.code.router));
-        }
-        break;
-
-        default:
-            NOTREACHED();
-            break;
-    }
-}
-
-//--------------------------------------------------------------------------------------------------
 void SessionWindow::setClientTitle(const Config& config)
 {
     QString session_name;
@@ -233,17 +199,9 @@ void SessionWindow::setClientTitle(const Config& config)
             session_name = tr("Desktop View");
             break;
 
-        case proto::SESSION_TYPE_FILE_TRANSFER:
-            session_name = tr("File Transfer");
-            break;
-
-        case proto::SESSION_TYPE_SYSTEM_INFO:
-            session_name = tr("System Information");
-            break;
-
-        case proto::SESSION_TYPE_TEXT_CHAT:
-            session_name = tr("Text Chat");
-            break;
+    case proto::SESSION_TYPE_DESKTOP_CONTROL:
+        session_name = tr("Desktop Control");
+        break;
 
         default:
             NOTREACHED();
@@ -253,10 +211,7 @@ void SessionWindow::setClientTitle(const Config& config)
     QString computer_name = QString::fromStdU16String(config.computer_name);
     if (computer_name.isEmpty())
     {
-        if (config.router_config.has_value())
-            computer_name = QString::fromStdU16String(config.address_or_id);
-        else
-            computer_name = QString("%1:%2").arg(config.address_or_id).arg(config.port);
+        computer_name = QString("%1:%2").arg(config.address_or_id).arg(config.port);
     }
 
     setWindowTitle(QString("%1 - %2").arg(computer_name).arg(session_name));
@@ -366,38 +321,6 @@ QString SessionWindow::authErrorToString(base::ClientAuthenticator::ErrorCode er
 
         default:
             message = QT_TR_NOOP("An unknown error occurred.");
-            break;
-    }
-
-    return tr(message);
-}
-
-//--------------------------------------------------------------------------------------------------
-// static
-QString SessionWindow::routerErrorToString(RouterController::ErrorCode error_code)
-{
-    const char* message;
-
-    switch (error_code)
-    {
-        case RouterController::ErrorCode::PEER_NOT_FOUND:
-            message = QT_TR_NOOP("No host with the specified ID was found.");
-            break;
-
-        case RouterController::ErrorCode::KEY_POOL_EMPTY:
-            message = QT_TR_NOOP("There are no relays available or the key pool is empty.");
-            break;
-
-        case RouterController::ErrorCode::RELAY_ERROR:
-            message = QT_TR_NOOP("Failed to connect to the relay server.");
-            break;
-
-        case RouterController::ErrorCode::ACCESS_DENIED:
-            message = QT_TR_NOOP("Access is denied.");
-            break;
-
-        default:
-            message = QT_TR_NOOP("Unknown error.");
             break;
     }
 

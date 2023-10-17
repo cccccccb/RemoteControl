@@ -26,7 +26,6 @@
 #include "Common/ui/about_dialog.h"
 #include "Common/ui/language_action.h"
 #include "Common/ui/status_dialog.h"
-#include "Common/ui/text_chat_widget.h"
 #include "Host/Core/user_session_agent.h"
 #include "Host/Core/user_session_agent_proxy.h"
 #include "Host/Core/user_session_window_proxy.h"
@@ -275,72 +274,6 @@ void MainWindow::onClientListChanged(const UserSessionAgent::ClientList& clients
     }
 
     notifier_->onClientListChanged(clients);
-
-    int text_chat_clients = 0;
-    for (const auto& client : clients)
-    {
-        if (client.session_type == proto::SESSION_TYPE_TEXT_CHAT)
-            ++text_chat_clients;
-    }
-
-    if (text_chat_clients > 0)
-    {
-        LOG(LS_INFO) << "Text chat clients: " << text_chat_clients;
-
-        if (text_chat_widget_)
-        {
-            LOG(LS_INFO) << "Text chat widget already exists";
-        }
-        else
-        {
-            LOG(LS_INFO) << "Create text chat widget";
-
-            text_chat_widget_ = new common::TextChatWidget();
-
-            connect(text_chat_widget_, &common::TextChatWidget::sig_sendMessage,
-                    this, [this](const proto::TextChatMessage& message)
-            {
-                if (agent_proxy_)
-                {
-                    proto::TextChat text_chat;
-                    text_chat.mutable_chat_message()->CopyFrom(message);
-                    agent_proxy_->onTextChat(text_chat);
-                }
-            });
-
-            connect(text_chat_widget_, &common::TextChatWidget::sig_sendStatus,
-                    this, [this](const proto::TextChatStatus& status)
-            {
-                if (agent_proxy_)
-                {
-                    proto::TextChat text_chat;
-                    text_chat.mutable_chat_status()->CopyFrom(status);
-                    agent_proxy_->onTextChat(text_chat);
-                }
-            });
-
-            connect(text_chat_widget_, &common::TextChatWidget::sig_textChatClosed, this, [this]()
-            {
-                std::vector<uint32_t> sessions = notifier_->sessions(proto::SESSION_TYPE_TEXT_CHAT);
-                for (const auto& session : sessions)
-                    onKillSession(session);
-            });
-
-            text_chat_widget_->setAttribute(Qt::WA_DeleteOnClose);
-            text_chat_widget_->show();
-            text_chat_widget_->activateWindow();
-        }
-    }
-    else
-    {
-        LOG(LS_INFO) << "No text chat clients";
-
-        if (text_chat_widget_)
-        {
-            LOG(LS_INFO) << "Close text chat window";
-            text_chat_widget_->close();
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -468,30 +401,6 @@ void MainWindow::onVideoRecordingStateChanged(
     }
 
     tray_icon_.showMessage(tr("Aspia Host"), message, QIcon(":/img/main.ico"), 1200);
-}
-
-//--------------------------------------------------------------------------------------------------
-void MainWindow::onTextChat(const proto::TextChat& text_chat)
-{
-    if (text_chat.has_chat_message())
-    {
-        if (text_chat_widget_)
-        {
-            text_chat_widget_->readMessage(text_chat.chat_message());
-
-            if (QApplication::applicationState() != Qt::ApplicationActive)
-                text_chat_widget_->activateWindow();
-        }
-    }
-    else if (text_chat.has_chat_status())
-    {
-        if (text_chat_widget_)
-            text_chat_widget_->readStatus(text_chat.chat_status());
-    }
-    else
-    {
-        LOG(LS_WARNING) << "Unhandled text chat message";
-    }
 }
 
 //--------------------------------------------------------------------------------------------------

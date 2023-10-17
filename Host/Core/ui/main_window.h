@@ -29,7 +29,6 @@
 
 namespace common {
 class StatusDialog;
-class TextChatWidget;
 } // namespace common
 
 namespace host {
@@ -65,7 +64,6 @@ protected:
         const proto::internal::ConnectConfirmationRequest& request) override;
     void onVideoRecordingStateChanged(
         const std::string& computer_name, const std::string& user_name, bool started) override;
-    void onTextChat(const proto::TextChat& text_chat) override;
 
 private slots:
     void realClose();
@@ -90,7 +88,6 @@ private:
     QSystemTrayIcon tray_icon_;
     QMenu tray_menu_;
     QPointer<NotifierWindow> notifier_;
-    QPointer<common::TextChatWidget> text_chat_widget_;
 
     common::StatusDialog* status_dialog_ = nullptr;
     proto::internal::RouterState::State last_state_ = proto::internal::RouterState::DISABLED;

@@ -33,11 +33,9 @@
 #include "Host/Core/service_constants.h"
 #include "proto/desktop_internal.pb.h"
 #include "proto/task_manager.pb.h"
-#include "proto/text_chat.pb.h"
 
 #if defined(OS_WIN)
 #include "Base/win/safe_mode_util.h"
-#include "Host/Core/system_info.h"
 #include "Host/Core/win/updater_launcher.h"
 #endif // defined(OS_WIN)
 
@@ -439,10 +437,6 @@ void ClientSessionDesktop::readExtension(const proto::DesktopExtension& extensio
     {
         readRemoteUpdateExtension(extension.data());
     }
-    else if (extension.name() == common::kSystemInfoExtension)
-    {
-        readSystemInfoExtension(extension.data());
-    }
     else if (extension.name() == common::kVideoRecordingExtension)
     {
         readVideoRecordingExtension(extension.data());
@@ -726,32 +720,6 @@ void ClientSessionDesktop::readRemoteUpdateExtension(const std::string& /* data 
     {
         LOG(LS_WARNING) << "Update can only be launched from a desktop manage session";
     }
-#endif // defined(OS_WIN)
-}
-
-//--------------------------------------------------------------------------------------------------
-void ClientSessionDesktop::readSystemInfoExtension(const std::string& data)
-{
-#if defined(OS_WIN)
-    proto::system_info::SystemInfoRequest system_info_request;
-
-    if (!data.empty())
-    {
-        if (!system_info_request.ParseFromString(data))
-        {
-            LOG(LS_WARNING) << "Unable to parse system info request";
-        }
-    }
-
-    proto::system_info::SystemInfo system_info;
-    createSystemInfo(system_info_request, &system_info);
-
-    outgoing_message_->Clear();
-    proto::DesktopExtension* desktop_extension = outgoing_message_->mutable_extension();
-    desktop_extension->set_name(common::kSystemInfoExtension);
-    desktop_extension->set_data(system_info.SerializeAsString());
-
-    sendMessage(proto::HOST_CHANNEL_ID_SESSION, base::serialize(*outgoing_message_));
 #endif // defined(OS_WIN)
 }
 

@@ -20,7 +20,7 @@
 #define BASE_PEER_USER_H
 
 #include "Base/memory/byte_array.h"
-#include "proto/router_admin.pb.h"
+#include "proto/user.pb.h"
 #include "Base/base_export.h"
 
 namespace base {

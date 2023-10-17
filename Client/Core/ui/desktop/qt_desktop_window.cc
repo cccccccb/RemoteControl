@@ -30,9 +30,6 @@
 #include "Client/Core/ui/desktop/desktop_toolbar.h"
 #include "Client/Core/ui/desktop/frame_factory_qimage.h"
 #include "Client/Core/ui/desktop/frame_qimage.h"
-#include "Client/Core/ui/file_transfer/qt_file_manager_window.h"
-#include "Client/Core/ui/sys_info/qt_system_info_window.h"
-#include "Client/Core/ui/text_chat/qt_text_chat_window.h"
 #include "Client/Core/ui/desktop/statistics_dialog.h"
 #include "Client/Core/ui/desktop/task_manager_window.h"
 #include "Common/desktop_session_constants.h"
@@ -151,23 +148,6 @@ QtDesktopWindow::QtDesktopWindow(proto::SessionType session_type,
         desktop_control_proxy_->onRemoteUpdate();
     });
 
-    connect(toolbar_, &DesktopToolBar::sig_startSystemInfo, this, [this]()
-    {
-        if (!system_info_)
-        {
-            system_info_ = new QtSystemInfoWindow();
-            system_info_->setAttribute(Qt::WA_DeleteOnClose);
-
-            connect(system_info_, &QtSystemInfoWindow::sig_systemInfoRequired,
-                    this, [this](const proto::system_info::SystemInfoRequest& request)
-            {
-                desktop_control_proxy_->onSystemInfoRequest(request);
-            });
-        }
-
-        system_info_->start(nullptr);
-    });
-
     connect(toolbar_, &DesktopToolBar::sig_startTaskManager, this, [this]()
     {
         if (!task_manager_)
@@ -218,30 +198,6 @@ QtDesktopWindow::QtDesktopWindow(proto::SessionType session_type,
     {
         client::Config session_config = config();
         session_config.session_type = session_type;
-
-        client::SessionWindow* session_window = nullptr;
-
-        switch (session_config.session_type)
-        {
-            case proto::SESSION_TYPE_FILE_TRANSFER:
-                session_window = new client::QtFileManagerWindow();
-                break;
-
-            case proto::SESSION_TYPE_TEXT_CHAT:
-                session_window = new client::QtTextChatWindow();
-                break;
-
-            default:
-                NOTREACHED();
-                break;
-        }
-
-        if (!session_window)
-            return;
-
-        session_window->setAttribute(Qt::WA_DeleteOnClose);
-        if (!session_window->connectToHost(session_config))
-            session_window->close();
     });
 
     connect(toolbar_, &DesktopToolBar::sig_recordingStateChanged, this, [this](bool enable)
@@ -290,8 +246,6 @@ void QtDesktopWindow::showWindow(
 
     show();
     activateWindow();
-
-    toolbar_->enableTextChat(peer_version_ >= base::Version(2, 4, 0));
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -345,7 +299,6 @@ void QtDesktopWindow::setCapabilities(const proto::DesktopCapabilities& capabili
 
     toolbar_->enablePowerControl(base::contains(extensions_list, common::kPowerControlExtension));
     toolbar_->enableScreenSelect(base::contains(extensions_list, common::kSelectScreenExtension));
-    toolbar_->enableSystemInfo(base::contains(extensions_list, common::kSystemInfoExtension));
     toolbar_->enableTaskManager(base::contains(extensions_list, common::kTaskManagerExtension));
     toolbar_->enableVideoPauseFeature(base::contains(extensions_list, common::kVideoPauseExtension));
     toolbar_->enableAudioPauseFeature(base::contains(extensions_list, common::kAudioPauseExtension));
@@ -432,13 +385,6 @@ void QtDesktopWindow::setCursorPosition(const proto::CursorPosition& cursor_posi
 
     desktop_->setCursorPosition(QPoint(pos_x, pos_y));
     desktop_->update();
-}
-
-//--------------------------------------------------------------------------------------------------
-void QtDesktopWindow::setSystemInfo(const proto::system_info::SystemInfo& system_info)
-{
-    if (system_info_)
-        system_info_->setSystemInfo(system_info);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -566,12 +512,6 @@ void QtDesktopWindow::setMouseCursor(std::shared_ptr<base::MouseCursor> mouse_cu
 }
 
 //--------------------------------------------------------------------------------------------------
-void QtDesktopWindow::onSystemInfoRequest(const proto::system_info::SystemInfoRequest& request)
-{
-    desktop_control_proxy_->onSystemInfoRequest(request);
-}
-
-//--------------------------------------------------------------------------------------------------
 void QtDesktopWindow::resizeEvent(QResizeEvent* event)
 {
     int panel_width = toolbar_->width();
@@ -671,9 +611,6 @@ void QtDesktopWindow::focusOutEvent(QFocusEvent* event)
 //--------------------------------------------------------------------------------------------------
 void QtDesktopWindow::closeEvent(QCloseEvent* /* event */)
 {
-    if (system_info_)
-        system_info_->close();
-
     if (task_manager_)
         task_manager_->close();
 }

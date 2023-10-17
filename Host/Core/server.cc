@@ -108,12 +108,6 @@ void Server::start()
     server_ = std::make_unique<base::TcpServer>();
     server_->start(u"0.0.0.0", settings_.tcpPort(), this);
 
-    if (settings_.isRouterEnabled())
-    {
-        LOG(LS_INFO) << "Router enabled";
-        connectToRouter();
-    }
-
     LOG(LS_INFO) << "Host server is started successfully";
 }
 
@@ -139,28 +133,6 @@ void Server::setPowerEvent(uint32_t power_event)
 #if defined(OS_WIN)
     LOG(LS_INFO) << "Power event: " << power_event;
 
-    switch (power_event)
-    {
-        case PBT_APMSUSPEND:
-        {
-            disconnectFromRouter();
-        }
-        break;
-
-        case PBT_APMRESUMEAUTOMATIC:
-        {
-            if (settings_.isRouterEnabled())
-            {
-                LOG(LS_INFO) << "Router enabled";
-                connectToRouter();
-            }
-        }
-        break;
-
-        default:
-            // Ignore other events.
-            break;
-    }
 #endif // defined(OS_WIN)
 }
 
@@ -168,27 +140,6 @@ void Server::setPowerEvent(uint32_t power_event)
 void Server::onNewConnection(std::unique_ptr<base::TcpChannel> channel)
 {
     LOG(LS_INFO) << "New DIRECT connection";
-    startAuthentication(std::move(channel));
-}
-
-//--------------------------------------------------------------------------------------------------
-void Server::onRouterStateChanged(const proto::internal::RouterState& router_state)
-{
-    LOG(LS_INFO) << "Router state changed";
-    user_session_manager_->onRouterStateChanged(router_state);
-}
-
-//--------------------------------------------------------------------------------------------------
-void Server::onHostIdAssigned(const std::string& session_name, base::HostId host_id)
-{
-    LOG(LS_INFO) << "New host ID assigned: " << host_id << " ('" << session_name << "')";
-    user_session_manager_->onHostIdChanged(session_name, host_id);
-}
-
-//--------------------------------------------------------------------------------------------------
-void Server::onClientConnected(std::unique_ptr<base::TcpChannel> channel)
-{
-    LOG(LS_INFO) << "New RELAY connection";
     startAuthentication(std::move(channel));
 }
 
@@ -241,27 +192,11 @@ void Server::onNewSession(base::ServerAuthenticatorManager::SessionInfo&& sessio
 //--------------------------------------------------------------------------------------------------
 void Server::onHostIdRequest(const std::string& session_name)
 {
-    if (!router_controller_)
-    {
-        LOG(LS_WARNING) << "No router controller";
-        return;
-    }
-
-    LOG(LS_INFO) << "New host ID request for session name: '" << session_name << "'";
-    router_controller_->hostIdRequest(session_name);
 }
 
 //--------------------------------------------------------------------------------------------------
 void Server::onResetHostId(base::HostId host_id)
 {
-    if (!router_controller_)
-    {
-        LOG(LS_WARNING) << "No router controller";
-        return;
-    }
-
-    LOG(LS_INFO) << "Reset host ID for: " << host_id;
-    router_controller_->resetHostId(host_id);
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -466,51 +401,6 @@ void Server::updateConfiguration(const ghc::filesystem::path& path, bool error)
 
         // Reload user lists.
         reloadUserList();
-
-        // If a controller instance already exists.
-        if (router_controller_)
-        {
-            LOG(LS_INFO) << "Has router controller";
-
-            if (settings_.isRouterEnabled())
-            {
-                LOG(LS_INFO) << "Router enabled";
-
-                // Check if the connection parameters have changed.
-                if (router_controller_->address() != settings_.routerAddress() ||
-                    router_controller_->port() != settings_.routerPort() ||
-                    router_controller_->publicKey() != settings_.routerPublicKey())
-                {
-                    // Reconnect to the router with new parameters.
-                    LOG(LS_INFO) << "Router parameters have changed";
-                    connectToRouter();
-                }
-                else
-                {
-                    LOG(LS_INFO) << "Router parameters without changes";
-                }
-            }
-            else
-            {
-                // Destroy the controller.
-                LOG(LS_INFO) << "The router is now disabled";
-                router_controller_.reset();
-
-                proto::internal::RouterState router_state;
-                router_state.set_state(proto::internal::RouterState::DISABLED);
-                user_session_manager_->onRouterStateChanged(router_state);
-            }
-        }
-        else
-        {
-            LOG(LS_INFO) << "No router controller";
-
-            if (settings_.isRouterEnabled())
-            {
-                LOG(LS_INFO) << "Router enabled";
-                connectToRouter();
-            }
-        }
     }
     else
     {
@@ -531,41 +421,6 @@ void Server::reloadUserList()
 
     // Updating the list of users.
     authenticator_manager_->setUserList(std::move(user_list));
-}
-
-//--------------------------------------------------------------------------------------------------
-void Server::connectToRouter()
-{
-    LOG(LS_INFO) << "Connecting to router...";
-
-    // Destroy the previous instance.
-    router_controller_.reset();
-
-    // Fill the connection parameters.
-    RouterController::RouterInfo router_info;
-    router_info.address = settings_.routerAddress();
-    router_info.port = settings_.routerPort();
-    router_info.public_key = settings_.routerPublicKey();
-
-    // Connect to the router.
-    router_controller_ = std::make_unique<RouterController>(task_runner_);
-    router_controller_->start(router_info, this);
-}
-
-//--------------------------------------------------------------------------------------------------
-void Server::disconnectFromRouter()
-{
-    LOG(LS_INFO) << "Disconnect from router";
-
-    if (router_controller_)
-    {
-        router_controller_.reset();
-        LOG(LS_INFO) << "Disconnected from router";
-    }
-    else
-    {
-        LOG(LS_INFO) << "No router controller";
-    }
 }
 
 //--------------------------------------------------------------------------------------------------

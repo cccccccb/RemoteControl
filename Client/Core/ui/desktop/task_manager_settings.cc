@@ -24,11 +24,11 @@ namespace client {
 
 namespace {
 
-const QString kWindowStateParam = QStringLiteral("TaskManager/WindowState");
-const QString kProcessColumnStateParam = QStringLiteral("TaskManager/ProcessColumnState");
-const QString kServiceColumnStateParam = QStringLiteral("TaskManager/ServiceColumnState");
-const QString kUserColumnStateParam = QStringLiteral("TaskManager/UserColumnState");
-const QString kUpdateSpeedParam = QStringLiteral("TaskManager/UpdateSpeed");
+static const QString kWindowStateParam = QStringLiteral("TaskManager/WindowState");
+static const QString kProcessColumnStateParam = QStringLiteral("TaskManager/ProcessColumnState");
+static const QString kServiceColumnStateParam = QStringLiteral("TaskManager/ServiceColumnState");
+static const QString kUserColumnStateParam = QStringLiteral("TaskManager/UserColumnState");
+static const QString kUpdateSpeedParam = QStringLiteral("TaskManager/UpdateSpeed");
 
 } // namespace
 

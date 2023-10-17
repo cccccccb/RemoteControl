@@ -42,6 +42,10 @@
 #include "Base/win/session_info.h"
 
 #include <UserEnv.h>
+
+#pragma comment(lib, "userenv.lib")
+#pragma comment(lib, "advapi32.lib")
+#pragma comment(lib, "wtsapi32.lib")
 #endif // defined(OS_WIN)
 
 namespace host {
@@ -325,17 +329,6 @@ void UserSessionManager::onUserSessionEvent(
         }
         break;
     }
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSessionManager::onRouterStateChanged(const proto::internal::RouterState& router_state)
-{
-    LOG(LS_INFO) << "New router state";
-    router_state_ = router_state;
-
-    // Send an event of each session.
-    for (const auto& session : sessions_)
-        session->onRouterStateChanged(router_state);
 }
 
 //--------------------------------------------------------------------------------------------------

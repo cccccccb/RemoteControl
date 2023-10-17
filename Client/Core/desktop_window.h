@@ -95,7 +95,6 @@ public:
     virtual void setCapabilities(const proto::DesktopCapabilities& capabilities) = 0;
     virtual void setScreenList(const proto::ScreenList& screen_list) = 0;
     virtual void setCursorPosition(const proto::CursorPosition& cursor_position) = 0;
-    virtual void setSystemInfo(const proto::system_info::SystemInfo& system_info) = 0;
     virtual void setTaskManager(const proto::task_manager::HostToClient& message) = 0;
     virtual void setMetrics(const Metrics& metrics) = 0;
 

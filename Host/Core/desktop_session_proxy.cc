@@ -30,7 +30,7 @@ namespace host {
 DesktopSessionProxy::DesktopSessionProxy()
 {
     std::string default_fps_string;
-    if (base::Environment::get("ASPIA_DEFAULT_FPS", &default_fps_string))
+    if (base::Environment::get("REMOTECONTROL_DEFAULT_FPS", &default_fps_string))
     {
         int default_fps = kDefaultScreenCaptureFps;
 
@@ -50,7 +50,7 @@ DesktopSessionProxy::DesktopSessionProxy()
     }
 
     std::string min_fps_string;
-    if (base::Environment::get("ASPIA_MIN_FPS", &min_fps_string))
+    if (base::Environment::get("REMOTECONTROL_MIN_FPS", &min_fps_string))
     {
         int min_fps = kMinScreenCaptureFps;
 
@@ -71,7 +71,7 @@ DesktopSessionProxy::DesktopSessionProxy()
 
     bool max_fps_from_env = false;
     std::string max_fps_string;
-    if (base::Environment::get("ASPIA_MAX_FPS", &max_fps_string))
+    if (base::Environment::get("REMOTECONTROL_MAX_FPS", &max_fps_string))
     {
         int max_fps = kMaxScreenCaptureFpsHighEnd;
 

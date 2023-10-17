@@ -48,18 +48,6 @@ public:
     uint16_t tcpPort() const;
     void setTcpPort(uint16_t port);
 
-    bool isRouterEnabled() const;
-    void setRouterEnabled(bool enable);
-
-    std::u16string routerAddress() const;
-    void setRouterAddress(const std::u16string& address);
-
-    uint16_t routerPort() const;
-    void setRouterPort(uint16_t port);
-
-    base::ByteArray routerPublicKey() const;
-    void setRouterPublicKey(const base::ByteArray& key);
-
     std::unique_ptr<base::UserList> userList() const;
     void setUserList(const base::UserList& user_list);
 

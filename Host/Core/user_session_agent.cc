@@ -128,10 +128,6 @@ void UserSessionAgent::onIpcMessageReceived(const base::ByteArray& buffer)
 
         window_proxy_->onRouterStateChanged(incoming_message_.router_state());
     }
-    else if (incoming_message_.has_text_chat())
-    {
-        window_proxy_->onTextChat(incoming_message_.text_chat());
-    }
     else if (incoming_message_.has_video_recording_state())
     {
         const proto::internal::VideoRecordingState& video_recording_state =
@@ -239,14 +235,6 @@ void UserSessionAgent::setPause(bool enable)
     control->set_code(proto::internal::ServiceControl::CODE_PAUSE);
     control->set_boolean(enable);
 
-    ipc_channel_->send(base::serialize(outgoing_message_));
-}
-
-//--------------------------------------------------------------------------------------------------
-void UserSessionAgent::onTextChat(const proto::TextChat& text_chat)
-{
-    outgoing_message_.Clear();
-    outgoing_message_.mutable_text_chat()->CopyFrom(text_chat);
     ipc_channel_->send(base::serialize(outgoing_message_));
 }
 

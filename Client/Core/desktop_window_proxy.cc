@@ -115,20 +115,6 @@ void DesktopWindowProxy::setCursorPosition(const proto::CursorPosition& cursor_p
 }
 
 //--------------------------------------------------------------------------------------------------
-void DesktopWindowProxy::setSystemInfo(const proto::system_info::SystemInfo& system_info)
-{
-    if (!ui_task_runner_->belongsToCurrentThread())
-    {
-        ui_task_runner_->postTask(
-            std::bind(&DesktopWindowProxy::setSystemInfo, shared_from_this(), system_info));
-        return;
-    }
-
-    if (desktop_window_)
-        desktop_window_->setSystemInfo(system_info);
-}
-
-//--------------------------------------------------------------------------------------------------
 void DesktopWindowProxy::setTaskManager(const proto::task_manager::HostToClient& message)
 {
     if (!ui_task_runner_->belongsToCurrentThread())

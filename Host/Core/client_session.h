@@ -23,7 +23,6 @@
 #include "Base/version.h"
 #include "Base/net/tcp_channel.h"
 #include "proto/desktop_extensions.pb.h"
-#include "proto/text_chat.pb.h"
 
 namespace base {
 class TcpChannelProxy;
@@ -48,7 +47,6 @@ public:
         virtual void onClientSessionFinished() = 0;
         virtual void onClientSessionVideoRecording(
             const std::string& computer_name, const std::string& user_name, bool started) = 0;
-        virtual void onClientSessionTextChat(uint32_t id, const proto::TextChat& text_chat) = 0;
     };
 
     enum class State

@@ -124,54 +124,6 @@ void SystemSettings::setTcpPort(uint16_t port)
 }
 
 //--------------------------------------------------------------------------------------------------
-bool SystemSettings::isRouterEnabled() const
-{
-    return settings_.get<bool>("RouterEnabled", false);
-}
-
-//--------------------------------------------------------------------------------------------------
-void SystemSettings::setRouterEnabled(bool enable)
-{
-    settings_.set<bool>("RouterEnabled", enable);
-}
-
-//--------------------------------------------------------------------------------------------------
-std::u16string SystemSettings::routerAddress() const
-{
-    return settings_.get<std::u16string>("RouterAddress");
-}
-
-//--------------------------------------------------------------------------------------------------
-void SystemSettings::setRouterAddress(const std::u16string& address)
-{
-    settings_.set<std::u16string>("RouterAddress", address);
-}
-
-//--------------------------------------------------------------------------------------------------
-uint16_t SystemSettings::routerPort() const
-{
-    return settings_.get<uint16_t>("RouterPort", DEFAULT_ROUTER_TCP_PORT);
-}
-
-//--------------------------------------------------------------------------------------------------
-void SystemSettings::setRouterPort(uint16_t port)
-{
-    settings_.set<uint16_t>("RouterPort", port);
-}
-
-//--------------------------------------------------------------------------------------------------
-base::ByteArray SystemSettings::routerPublicKey() const
-{
-    return settings_.get<base::ByteArray>("RouterPublicKey");
-}
-
-//--------------------------------------------------------------------------------------------------
-void SystemSettings::setRouterPublicKey(const base::ByteArray& key)
-{
-    settings_.set<base::ByteArray>("RouterPublicKey", key);
-}
-
-//--------------------------------------------------------------------------------------------------
 std::unique_ptr<base::UserList> SystemSettings::userList() const
 {
     std::unique_ptr<base::UserList> users = base::UserList::createEmpty();

@@ -20,9 +20,6 @@
 
 #include "Base/logging.h"
 #include "Host/Core/client_session_desktop.h"
-#include "Host/Core/client_session_file_transfer.h"
-#include "Host/Core/client_session_system_info.h"
-#include "Host/Core/client_session_text_chat.h"
 
 namespace host {
 
@@ -66,19 +63,6 @@ std::unique_ptr<ClientSession> ClientSession::create(proto::SessionType session_
         case proto::SESSION_TYPE_DESKTOP_VIEW:
             return std::unique_ptr<ClientSessionDesktop>(
                 new ClientSessionDesktop(session_type, std::move(channel), std::move(task_runner)));
-
-        case proto::SESSION_TYPE_FILE_TRANSFER:
-            return std::unique_ptr<ClientSessionFileTransfer>(
-                new ClientSessionFileTransfer(std::move(channel), std::move(task_runner)));
-
-        case proto::SESSION_TYPE_SYSTEM_INFO:
-            return std::unique_ptr<ClientSessionSystemInfo>(
-                new ClientSessionSystemInfo(std::move(channel)));
-
-        case proto::SESSION_TYPE_TEXT_CHAT:
-            return std::unique_ptr<ClientSessionTextChat>(
-                new ClientSessionTextChat(std::move(channel)));
-
         default:
             LOG(LS_ERROR) << "Unknown session type: " << session_type;
             return nullptr;

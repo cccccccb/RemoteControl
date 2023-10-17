@@ -23,7 +23,6 @@
 #include "Base/optional.hpp"
 #include "Client/Core/client_desktop.h"
 #include "Client/Core/desktop_window.h"
-#include "Client/Core/system_info_control.h"
 #include "Client/Core/ui/session_window.h"
 #include "Client/Core/ui/desktop/desktop_widget.h"
 
@@ -47,8 +46,7 @@ class TaskManagerWindow;
 
 class QtDesktopWindow :
     public SessionWindow,
-    public DesktopWindow,
-    public SystemInfoControl
+    public DesktopWindow
 {
     Q_OBJECT
 
@@ -68,7 +66,6 @@ public:
     void setCapabilities(const proto::DesktopCapabilities& capabilities) override;
     void setScreenList(const proto::ScreenList& screen_list) override;
     void setCursorPosition(const proto::CursorPosition& cursor_position) override;
-    void setSystemInfo(const proto::system_info::SystemInfo& system_info) override;
     void setTaskManager(const proto::task_manager::HostToClient& message) override;
     void setMetrics(const DesktopWindow::Metrics& metrics) override;
     std::unique_ptr<FrameFactory> frameFactory() override;
@@ -76,9 +73,6 @@ public:
     void setFrame(const base::Size& screen_size, std::shared_ptr<base::Frame> frame) override;
     void drawFrame() override;
     void setMouseCursor(std::shared_ptr<base::MouseCursor> mouse_cursor) override;
-
-    // SystemInfoControl implementation.
-    void onSystemInfoRequest(const proto::system_info::SystemInfoRequest& request) override;
 
 protected:
     // QWidget implementation.
@@ -117,7 +111,6 @@ private:
     DesktopToolBar* toolbar_ = nullptr;
     DesktopWidget* desktop_ = nullptr;
 
-    QPointer<QtSystemInfoWindow> system_info_;
     QPointer<TaskManagerWindow> task_manager_;
     QPointer<StatisticsDialog> statistics_dialog_;
 

@@ -25,6 +25,8 @@
 #include "Base/win/scoped_clipboard.h"
 #include "Base/win/scoped_hglobal.h"
 
+#pragma comment(lib, "user32.lib")
+
 namespace common {
 
 //--------------------------------------------------------------------------------------------------

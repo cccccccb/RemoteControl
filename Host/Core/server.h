@@ -25,7 +25,6 @@
 #include "Base/peer/server_authenticator_manager.h"
 #include "Common/http_file_downloader.h"
 #include "Common/update_checker.h"
-#include "Host/Core/router_controller.h"
 #include "Host/Core/user_session_manager.h"
 #include "Host/Core/system_settings.h"
 
@@ -39,7 +38,6 @@ namespace host {
 
 class Server
     : public base::TcpServer::Delegate,
-      public RouterController::Delegate,
       public base::ServerAuthenticatorManager::Delegate,
       public UserSessionManager::Delegate,
       public common::UpdateChecker::Delegate,
@@ -56,11 +54,6 @@ public:
 protected:
     // net::TcpServer::Delegate implementation.
     void onNewConnection(std::unique_ptr<base::TcpChannel> channel) override;
-
-    // RouterController::Delegate implementation.
-    void onRouterStateChanged(const proto::internal::RouterState& router_state) override;
-    void onHostIdAssigned(const std::string& session_name, base::HostId host_id) override;
-    void onClientConnected(std::unique_ptr<base::TcpChannel> channel) override;
 
     // base::AuthenticatorManager::Delegate implementation.
     void onNewSession(base::ServerAuthenticatorManager::SessionInfo&& session_info) override;
@@ -84,8 +77,6 @@ private:
     void deleteFirewallRules();
     void updateConfiguration(const ghc::filesystem::path& path, bool error);
     void reloadUserList();
-    void connectToRouter();
-    void disconnectFromRouter();
     void checkForUpdates();
 
     std::shared_ptr<base::TaskRunner> task_runner_;
@@ -96,7 +87,6 @@ private:
 
     // Accepts incoming network connections.
     std::unique_ptr<base::TcpServer> server_;
-    std::unique_ptr<RouterController> router_controller_;
     std::unique_ptr<base::ServerAuthenticatorManager> authenticator_manager_;
     std::unique_ptr<UserSessionManager> user_session_manager_;
 

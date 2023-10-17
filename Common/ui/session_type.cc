@@ -33,14 +33,8 @@ const char* sessionTypeToString(proto::SessionType session_type)
         case proto::SESSION_TYPE_DESKTOP_VIEW:
             return QT_TRANSLATE_NOOP("SessionType", "Desktop View");
 
-        case proto::SESSION_TYPE_FILE_TRANSFER:
-            return QT_TRANSLATE_NOOP("SessionType", "File Transfer");
-
-        case proto::SESSION_TYPE_SYSTEM_INFO:
-            return QT_TRANSLATE_NOOP("SessionType", "System Information");
-
-        case proto::SESSION_TYPE_TEXT_CHAT:
-            return QT_TRANSLATE_NOOP("SessionType", "Text Chat");
+        case proto::SESSION_TYPE_DESKTOP_CONTROL:
+            return QT_TRANSLATE_NOOP("SessionType", "Desktop Control");
 
         default:
             return "";

@@ -1,5 +1,4 @@
 SOURCE_BASE_HEADERS +=                                                      \
-    $${_PRO_FILE_PWD_}/applications_reader.h                                \
     $${_PRO_FILE_PWD_}/base64.h                                             \
     $${_PRO_FILE_PWD_}/bitset.h                                             \
     $${_PRO_FILE_PWD_}/command_line.h                                       \
@@ -12,7 +11,6 @@ SOURCE_BASE_HEADERS +=                                                      \
     $${_PRO_FILE_PWD_}/endian_util.h                                        \
     $${_PRO_FILE_PWD_}/environment.h                                        \
     $${_PRO_FILE_PWD_}/guid.h                                               \
-    $${_PRO_FILE_PWD_}/license_reader.h                                     \
     $${_PRO_FILE_PWD_}/location.h                                           \
     $${_PRO_FILE_PWD_}/logging.h                                            \
     $${_PRO_FILE_PWD_}/macros_magic.h                                       \
@@ -107,8 +105,6 @@ SOURCE_BASE_SOURCES +=                                                      \
     $${_PRO_FILE_PWD_}/version.cc                                           \
     $${_PRO_FILE_PWD_}/waitable_event.cc                                    \
     $${_PRO_FILE_PWD_}/waitable_timer.cc                                    \
-    $${_PRO_FILE_PWD_}/applications_reader_win.cc                           \
-    $${_PRO_FILE_PWD_}/license_reader_win.cc                                \
     $${_PRO_FILE_PWD_}/power_controller_win.cc                              \
     $${_PRO_FILE_PWD_}/smbios_reader_win.cc                                 \
     $${_PRO_FILE_PWD_}/service_win.cc                                       \
@@ -466,8 +462,6 @@ SOURCE_BASE_PEER_HEADERS +=                                                 \
     $${_PRO_FILE_PWD_}/peer/authenticator.h                                 \
     $${_PRO_FILE_PWD_}/peer/client_authenticator.h                          \
     $${_PRO_FILE_PWD_}/peer/host_id.h                                       \
-    $${_PRO_FILE_PWD_}/peer/relay_peer.h                                    \
-    $${_PRO_FILE_PWD_}/peer/relay_peer_manager.h                            \
     $${_PRO_FILE_PWD_}/peer/server_authenticator.h                          \
     $${_PRO_FILE_PWD_}/peer/server_authenticator_manager.h                  \
     $${_PRO_FILE_PWD_}/peer/user.h                                          \
@@ -478,8 +472,6 @@ SOURCE_BASE_PEER_SOURCES +=                                                 \
     $${_PRO_FILE_PWD_}/peer/authenticator.cc                                \
     $${_PRO_FILE_PWD_}/peer/client_authenticator.cc                         \
     $${_PRO_FILE_PWD_}/peer/host_id.cc                                      \
-    $${_PRO_FILE_PWD_}/peer/relay_peer.cc                                   \
-    $${_PRO_FILE_PWD_}/peer/relay_peer_manager.cc                           \
     $${_PRO_FILE_PWD_}/peer/server_authenticator.cc                         \
     $${_PRO_FILE_PWD_}/peer/server_authenticator_manager.cc                 \
     $${_PRO_FILE_PWD_}/peer/user.cc                                         \

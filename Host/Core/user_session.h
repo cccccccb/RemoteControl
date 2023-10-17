@@ -93,7 +93,6 @@ public:
 
     void onClientSession(std::unique_ptr<ClientSession> client_session);
     void onUserSessionEvent(base::win::SessionStatus status, base::SessionId session_id);
-    void onRouterStateChanged(const proto::internal::RouterState& router_state);
     void onHostIdChanged(base::HostId host_id);
     void onSettingsChanged();
 
@@ -121,7 +120,6 @@ protected:
     void onClientSessionFinished() override;
     void onClientSessionVideoRecording(
         const std::string& computer_name, const std::string& user_name, bool started) override;
-    void onClientSessionTextChat(uint32_t id, const proto::TextChat& text_chat) override;
 
 private:
     void onSessionDettached(const base::Location& location);
@@ -130,13 +128,9 @@ private:
     void updateCredentials(const base::Location& location);
     void sendCredentials(const base::Location& location);
     void killClientSession(uint32_t id);
-    void sendRouterState(const base::Location& location);
     void sendHostIdRequest(const base::Location& location);
     void addNewClientSession(std::unique_ptr<ClientSession> client_session);
     void setState(const base::Location& location, State state);
-    void onTextChatHasUser(const base::Location& location, bool has_user);
-    void onTextChatSessionStarted(uint32_t id);
-    void onTextChatSessionFinished(uint32_t id);
     void mergeAndSendConfiguration();
 
     std::shared_ptr<base::TaskRunner> task_runner_;
@@ -170,9 +164,6 @@ private:
 
     UnconfirmedClientSessionList pending_clients_;
     ClientSessionList desktop_clients_;
-    ClientSessionList file_transfer_clients_;
-    ClientSessionList system_info_clients_;
-    ClientSessionList text_chat_clients_;
 
     std::unique_ptr<DesktopSessionManager> desktop_session_;
     base::local_shared_ptr<DesktopSessionProxy> desktop_session_proxy_;

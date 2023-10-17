@@ -623,40 +623,6 @@ void ConfigDialog::onButtonBoxClicked(QAbstractButton* button)
             }
         }
 
-        settings.setRouterEnabled(ui.checkbox_enable_router->isChecked());
-        if (ui.checkbox_enable_router->isChecked())
-        {
-            base::Address router_address = base::Address::fromString(
-                ui.edit_router_address->text().toStdU16String(), DEFAULT_ROUTER_TCP_PORT);
-            if (!router_address.isValid())
-            {
-                QMessageBox::warning(this,
-                                     tr("Warning"),
-                                     tr("Incorrect router address entered."),
-                                     QMessageBox::Ok);
-                ui.edit_router_address->setFocus();
-                ui.edit_router_address->selectAll();
-                return;
-            }
-
-            base::ByteArray router_public_key =
-                base::fromHex(ui.edit_router_public_key->toPlainText().toStdString());
-            if (router_public_key.size() != 32)
-            {
-                QMessageBox::warning(this,
-                                     tr("Warning"),
-                                     tr("Incorrect router public key entered."),
-                                     QMessageBox::Ok);
-                ui.edit_router_public_key->setFocus();
-                ui.edit_router_public_key->selectAll();
-                return;
-            }
-
-            settings.setRouterAddress(router_address.host());
-            settings.setRouterPort(router_address.port());
-            settings.setRouterPublicKey(router_public_key);
-        }
-
         std::unique_ptr<base::UserList> user_list = base::UserList::createEmpty();
 
         for (int i = 0; i < ui.tree_users->topLevelItemCount(); ++i)
@@ -781,22 +747,6 @@ void ConfigDialog::reloadAll()
     item_index = ui.combobox_no_user_action->findData(static_cast<int>(no_user_action));
     if (item_index != -1)
         ui.combobox_no_user_action->setCurrentIndex(item_index);
-
-    bool is_router_enabled = settings.isRouterEnabled();
-
-    base::Address router_address(DEFAULT_ROUTER_TCP_PORT);
-    router_address.setHost(settings.routerAddress());
-    router_address.setPort(settings.routerPort());
-
-    ui.checkbox_enable_router->setChecked(is_router_enabled);
-    ui.edit_router_address->setText(QString::fromStdU16String(router_address.toString()));
-    ui.edit_router_public_key->setPlainText(
-        QString::fromStdString(base::toHex(settings.routerPublicKey())));
-
-    ui.label_router_address->setEnabled(is_router_enabled);
-    ui.edit_router_address->setEnabled(is_router_enabled);
-    ui.label_router_public_key->setEnabled(is_router_enabled);
-    ui.edit_router_public_key->setEnabled(is_router_enabled);
 
     int current_video_capturer =
         ui.combo_video_capturer->findData(settings.preferredVideoCapturer());

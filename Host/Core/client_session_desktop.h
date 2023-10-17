@@ -87,7 +87,6 @@ private:
     void readAudioPauseExtension(const std::string& data);
     void readPowerControlExtension(const std::string& data);
     void readRemoteUpdateExtension(const std::string& data);
-    void readSystemInfoExtension(const std::string& data);
     void readVideoRecordingExtension(const std::string& data);
     void readTaskManagerExtension(const std::string& data);
     void onOverflowDetectionTimer();

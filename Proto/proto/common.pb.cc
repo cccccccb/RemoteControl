@@ -121,44 +121,36 @@ bool SessionType_IsValid(int value) {
     case 1:
     case 2:
     case 4:
-    case 8:
-    case 16:
-    case 31:
+    case 7:
       return true;
     default:
       return false;
   }
 }
 
-static ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<std::string> SessionType_strings[7] = {};
+static ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<std::string> SessionType_strings[5] = {};
 
 static const char SessionType_names[] =
   "SESSION_TYPE_ALL"
+  "SESSION_TYPE_DESKTOP_CONTROL"
   "SESSION_TYPE_DESKTOP_MANAGE"
   "SESSION_TYPE_DESKTOP_VIEW"
-  "SESSION_TYPE_FILE_TRANSFER"
-  "SESSION_TYPE_SYSTEM_INFO"
-  "SESSION_TYPE_TEXT_CHAT"
   "SESSION_TYPE_UNKNOWN";
 
 static const ::PROTOBUF_NAMESPACE_ID::internal::EnumEntry SessionType_entries[] = {
-  { {SessionType_names + 0, 16}, 31 },
-  { {SessionType_names + 16, 27}, 1 },
-  { {SessionType_names + 43, 25}, 2 },
-  { {SessionType_names + 68, 26}, 4 },
-  { {SessionType_names + 94, 24}, 8 },
-  { {SessionType_names + 118, 22}, 16 },
-  { {SessionType_names + 140, 20}, 0 },
+  { {SessionType_names + 0, 16}, 7 },
+  { {SessionType_names + 16, 28}, 4 },
+  { {SessionType_names + 44, 27}, 1 },
+  { {SessionType_names + 71, 25}, 2 },
+  { {SessionType_names + 96, 20}, 0 },
 };
 
 static const int SessionType_entries_by_number[] = {
-  6, // 0 -> SESSION_TYPE_UNKNOWN
-  1, // 1 -> SESSION_TYPE_DESKTOP_MANAGE
-  2, // 2 -> SESSION_TYPE_DESKTOP_VIEW
-  3, // 4 -> SESSION_TYPE_FILE_TRANSFER
-  4, // 8 -> SESSION_TYPE_SYSTEM_INFO
-  5, // 16 -> SESSION_TYPE_TEXT_CHAT
-  0, // 31 -> SESSION_TYPE_ALL
+  4, // 0 -> SESSION_TYPE_UNKNOWN
+  2, // 1 -> SESSION_TYPE_DESKTOP_MANAGE
+  3, // 2 -> SESSION_TYPE_DESKTOP_VIEW
+  1, // 4 -> SESSION_TYPE_DESKTOP_CONTROL
+  0, // 7 -> SESSION_TYPE_ALL
 };
 
 const std::string& SessionType_Name(
@@ -167,12 +159,12 @@ const std::string& SessionType_Name(
       ::PROTOBUF_NAMESPACE_ID::internal::InitializeEnumStrings(
           SessionType_entries,
           SessionType_entries_by_number,
-          7, SessionType_strings);
+          5, SessionType_strings);
   (void) dummy;
   int idx = ::PROTOBUF_NAMESPACE_ID::internal::LookUpEnumName(
       SessionType_entries,
       SessionType_entries_by_number,
-      7, value);
+      5, value);
   return idx == -1 ? ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyString() :
                      SessionType_strings[idx].get();
 }
@@ -180,7 +172,7 @@ bool SessionType_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, SessionType* value) {
   int int_value;
   bool success = ::PROTOBUF_NAMESPACE_ID::internal::LookUpEnumValue(
-      SessionType_entries, 7, name, &int_value);
+      SessionType_entries, 5, name, &int_value);
   if (success) {
     *value = static_cast<SessionType>(int_value);
   }

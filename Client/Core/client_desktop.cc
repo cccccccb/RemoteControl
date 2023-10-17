@@ -29,6 +29,7 @@
 #include "Base/codec/webm_file_writer.h"
 #include "Base/codec/webm_video_encoder.h"
 #include "Base/desktop/mouse_cursor.h"
+#include "Base/waitable_timer.h"
 #include "Client/Core/desktop_control_proxy.h"
 #include "Client/Core/desktop_window.h"
 #include "Client/Core/desktop_window_proxy.h"
@@ -399,17 +400,6 @@ void ClientDesktop::onRemoteUpdate()
 }
 
 //--------------------------------------------------------------------------------------------------
-void ClientDesktop::onSystemInfoRequest(const proto::system_info::SystemInfoRequest& request)
-{
-    outgoing_message_->Clear();
-    proto::DesktopExtension* extension = outgoing_message_->mutable_extension();
-    extension->set_name(common::kSystemInfoExtension);
-    extension->set_data(request.SerializeAsString());
-
-    sendMessage(proto::HOST_CHANNEL_ID_SESSION, *outgoing_message_);
-}
-
-//--------------------------------------------------------------------------------------------------
 void ClientDesktop::onTaskManager(const proto::task_manager::ClientToHost& message)
 {
     outgoing_message_->Clear();
@@ -737,18 +727,6 @@ void ClientDesktop::readExtension(const proto::DesktopExtension& extension)
         }
 
         desktop_window_proxy_->setScreenList(screen_list);
-    }
-    else if (extension.name() == common::kSystemInfoExtension)
-    {
-        proto::system_info::SystemInfo system_info;
-
-        if (!system_info.ParseFromString(extension.data()))
-        {
-            qWarning() << "Unable to parse system info extension data";
-            return;
-        }
-
-        desktop_window_proxy_->setSystemInfo(system_info);
     }
     else
     {
